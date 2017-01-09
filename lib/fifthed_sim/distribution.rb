@@ -1,6 +1,5 @@
 module FifthedSim
   class Distribution
-
     def self.for_number(num)
       self.new({num => 1}, 1)
     end
@@ -43,15 +42,20 @@ module FifthedSim
     end
 
     def convolve(other)
-      h = Hash.new{|hash, key| hash[key] = 0}
-      m = other.map
-      @map.each do |k, v|
-        m.each do |k2, v2|
-          key = k + k2
-          h[key] = h[key] + ((v + v2) / 2)
-        end
+      h = {}
+      abs_min = [@min, other.min].min
+      abs_max = [@max, other.max].max
+      min_possible = @min + other.min
+      max_possible = @max + other.max
+      tp = @total_possible * other.total_possible
+      # TODO: there has to be a less stupid way to do this right?
+      v = min_possible.upto(max_possible).map do |val|
+        sum = abs_min.upto(abs_max).map do |m|
+          percent_exactly(m) * other.percent_exactly(val - m)
+        end.inject(:+)
+        [val, (sum * tp).to_i]
       end
-      self.class.new(h,@total_possible * other.total_possible)
+      self.class.new(Hash[v], tp)
     end
 
     def ==(other)

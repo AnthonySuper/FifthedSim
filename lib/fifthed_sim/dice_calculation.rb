@@ -60,11 +60,18 @@ module FifthedSim
     end
 
     def has_critfail?
-      @components.any?(&:has_critfail?)
+      @components.any?{|x| x.has_critfail?}
     end
 
     def has_crit?
-      @components.any?(&:has_crit?)
+      @components.any?{|x| x.has_crit?}
+    end
+
+    def distribution
+      # TODO: Maybe figure out how to minimize convolution expense?
+      @components.map{|x| x.distribution}.inject do |memo, p|
+        memo.convolve(p)
+      end
     end
 
 

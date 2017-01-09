@@ -57,5 +57,16 @@ RSpec.describe FifthedSim::Distribution do
         expect(subject.probability_map.values).to eq(20.times.map{1.0 / 20})
       end
     end
+
+    context "with 2d6" do
+      subject { d20.convolve(2.d(6).distribution) }
+      it "has a correct probability for 3" do
+        expect(subject.percent_exactly(3)).to be_within(0.0001).of(0.0014)
+      end
+
+      it "has a correct probability for 15" do
+        expect(subject.percent_exactly(15)).to be_within(0.001).of(0.05)
+      end
+    end
   end
 end
