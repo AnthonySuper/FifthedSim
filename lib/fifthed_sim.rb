@@ -1,8 +1,9 @@
 require "fifthed_sim/version"
-require "fifthed_sim/dice_result.rb"
-require "fifthed_sim/die_roll.rb"
-require "fifthed_sim/dice_calculation.rb"
+require "fifthed_sim/dice_result"
+require "fifthed_sim/die_roll"
+require "fifthed_sim/dice_calculation"
 require "fifthed_sim/distribution"
+require "securerandom"
 
 module FifthedSim
   def self.d(*args)
