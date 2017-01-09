@@ -23,5 +23,9 @@ RSpec.describe FifthedSim::Distribution do
     it "calculates values above the range" do
       expect(subject.percent_exactly(41)).to eq(0)
     end
+
+    it "calculates values up to a certain value" do
+      expect(subject.percent_least(39)).to eq(1.0 - unique_prob)
+    end
   end
 end
