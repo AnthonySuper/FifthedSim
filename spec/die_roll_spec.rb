@@ -1,3 +1,5 @@
+require 'spec_helper'
+
 RSpec.describe FifthedSim::DieRoll do
   describe "#roll" do
     it "fails when given a float" do
@@ -44,6 +46,4 @@ RSpec.describe FifthedSim::DieRoll do
       expect(subject.to_f).to eq(20.0)
     end
   end
-
-
 end

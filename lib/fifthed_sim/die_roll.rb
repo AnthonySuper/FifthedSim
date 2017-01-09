@@ -1,13 +1,24 @@
+require_relative './helpers/average_comparison'
+
 module FifthedSim
   class DieRoll
+    include AverageComparison
 
     def self.roll(type)
       raise ArgumentError, "Must be an Integer" unless type.is_a? Fixnum
       self.new(SecureRandom.random_number(type - 1) + 1, type)
     end
 
+    # Obtain a DieRoll filled with the average result of this die type
+    # This will round down.
     def self.average(type)
       self.new((type + 1) / 2, type)
+    end
+
+    # Obtain an average value for this die type, as a float
+    # We're extremely lazy here.
+    def self.average_value(type)
+      self.new(1, type).average
     end
 
     def initialize(val, type)
@@ -20,24 +31,12 @@ module FifthedSim
 
     attr_reader :value, :type
 
-    def average_value
-      (@type + 1) / 2
-    end
-
-    def below_average?
-      @value < average_value
-    end
-
-    def above_average?
-      @value > average_value
-    end
-
-    def average?
-      @value == average_value
+    def average
+      (@type + 1) / 2.0
     end
 
     def difference_from_average
-      @value - average_value
+      @value - average
     end
 
     def critfail?
