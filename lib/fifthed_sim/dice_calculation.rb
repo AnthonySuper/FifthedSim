@@ -23,6 +23,10 @@ module CalculatedFixnum
     def distance_from_average
       0
     end
+
+    def distribution
+      FifthedSim::Distribution.for_number(self)
+    end
   end
 end
 
@@ -62,6 +66,7 @@ module FifthedSim
     def has_crit?
       @components.any?(&:has_crit?)
     end
+
 
     private
     ALLOWED_TYPES = [DiceResult,

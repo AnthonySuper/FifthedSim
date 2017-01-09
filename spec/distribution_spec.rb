@@ -33,7 +33,7 @@ RSpec.describe FifthedSim::Distribution do
   describe "convolving a d20" do
     let(:d20) { FifthedSim::DiceResult.d(1, 20).distribution }
     context "with a d20" do
-      let(:subject) do
+      subject do
         d20.convolve(d20)
       end
 
@@ -41,6 +41,21 @@ RSpec.describe FifthedSim::Distribution do
         expect(subject.percent_exactly(40)).to eq(1.0 / (20 ** 2))
       end
       it { is_expected.to eq(two_d20) }
+    end
+
+    context "with the number 5" do
+      subject { d20.convolve(described_class.for_number(5)) }
+      it "has no chance of being 2" do
+        expect(subject.percent_exactly(2)).to eq(0)
+      end
+
+      it "has a 1 in 20 chance of being a 6" do
+        expect(subject.percent_exactly(6)).to eq(1.0 / 20)
+      end
+      
+      it "uniformly has a chance of 1 in 20" do
+        expect(subject.probability_map.values).to eq(20.times.map{1.0 / 20})
+      end
     end
   end
 end

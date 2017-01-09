@@ -1,5 +1,10 @@
 module FifthedSim
   class Distribution
+
+    def self.for_number(num)
+      self.new({num => 1}, 1)
+    end
+
     def initialize(map, total_possible)
       keys = map.keys
       @max = keys.max
@@ -21,7 +26,7 @@ module FifthedSim
     end
 
     def probability_map
-      Hash[@map.map{|k, v| [k, v / @total_possible]}]
+      Hash[@map.map{|k, v| [k, v / @total_possible.to_f]}]
     end
 
     def percent_exactly(num)
