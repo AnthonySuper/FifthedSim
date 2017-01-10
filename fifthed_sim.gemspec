@@ -11,7 +11,7 @@ Gem::Specification.new do |spec|
 
   spec.summary       = %q{A 5th edition D&D encounter simulator}
   spec.description   = %q{This is a simulator to run a D&D encounter. It provides DSL-like tools to describe actions and abilities, and then it will (eventually) play with some degree of AI skill.}
-  spec.homepage      = "TODO: Put your gem's website or public repo URL here."
+  spec.homepage      = "https://github.com/AnthonySuper/FifthedSim"
   spec.license       = "MIT"
 
   spec.files         = `git ls-files -z`.split("\x0").reject { |f| f.match(%r{^(test|spec|features)/}) }
