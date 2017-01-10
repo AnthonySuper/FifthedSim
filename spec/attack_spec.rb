@@ -13,6 +13,7 @@ RSpec.describe FifthedSim::Attack do
     end
 
     let(:attack) { subject.call }
+
     it "does not throw" do
       expect(&subject).to_not raise_error
     end

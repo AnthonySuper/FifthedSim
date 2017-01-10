@@ -39,8 +39,7 @@ module FifthedSim
     using CalculatedFixnum
 
     def initialize(*values)
-      values.each{|v| check_type(v) }
-      @components = values
+      @components = values.flatten.map{|v| check_type(v)}.flatten
     end
 
     def +(other)
@@ -55,7 +54,9 @@ module FifthedSim
     end
 
     def dice
-      @components.find_all{|x| x.is_a?(DieRoll)}
+      require 'pry'
+      binding.pry
+      self.class.new(*@components.find_all{|x| x.is_a?(DieRoll)})
     end
 
     def average
@@ -80,11 +81,17 @@ module FifthedSim
 
     private
     ALLOWED_TYPES = [DiceResult,
-                     Fixnum]
+                     Fixnum,
+                     DiceCalculation]
 
     def check_type(obj)
-      unless ALLOWED_TYPES.any?{|t| obj.is_a?(t) }
-        raise TypeError, "not a proper member type"
+      case obj
+      when Fixnum, DiceResult
+        obj
+      when DiceCalculation
+        obj.components
+      else
+        raise TypeError, "Did not expect type #{obj.inspect}"
       end
     end  
   end

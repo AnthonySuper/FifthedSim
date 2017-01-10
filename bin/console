@@ -3,12 +3,29 @@
 require "bundler/setup"
 require "fifthed_sim"
 
-# You can add fixtures and/or initialization code here to make experimenting
-# with your gem easier. You can also use a different console, if you like.
 
-# (If you use this, don't forget to add pry to your Gemfile!)
-# require "pry"
-# Pry.start
-
-require "irb"
-IRB.start
+require "pry"
+Pry.start
+#require 'ostruct'
+#require 'csv'
+#
+#aa = FifthedSim::Attack.define "Sword of Iron Will" do
+#  modifier 9
+#  damage 2.d(6)
+#  crit_threshold 19
+#  crit_damage (7.d(6) + 5)
+#end
+#
+#fake_monster = OpenStruct.new
+#fake_monster[:ac] = 18
+#dist = aa.hit_distribution(fake_monster)
+#
+#m = dist.map
+#
+#keys = m.keys.sort
+#CSV.open("data.csv", "wb") do |csv|
+#  csv << keys
+#  csv << keys.map{|k| m[k]}
+#end
+#
+#binding.pry

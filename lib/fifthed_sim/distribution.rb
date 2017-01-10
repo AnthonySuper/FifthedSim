@@ -28,7 +28,7 @@ module FifthedSim
 
 
     def range
-      (@max..@min)
+      (@min..@max)
     end
 
     def map
@@ -106,6 +106,17 @@ module FifthedSim
     def percent_exactly(num)
       return 0 if num < @min || num > @max
       @map[num] || 0
+    end
+
+    def variance
+      avg = average
+      @map.map do |k, v|
+        ((k - avg)**2) * v
+      end.inject(:+)
+    end
+
+    def std_dev
+      Math.sqrt(variance)
     end
 
     def percent_least(num)
