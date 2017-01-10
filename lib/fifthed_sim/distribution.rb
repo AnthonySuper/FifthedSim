@@ -61,6 +61,41 @@ module FifthedSim
       Distribution.new(h)
     end
 
+    ##
+    # Takes a block or callable object.
+    # This function will call the callable with all possible outcomes of this distribution.
+    # The callable should return another distribution, representing the possible values when this possibility happens.
+    # This will then return a value of those possibilities.
+    #
+    # An example is probably helpful here.
+    # Let's consider the case where a monster with +0 to hit is attacking a creature with AC 16 for 1d4 damage, and crits on a 20.
+    # If we want a distribution of possible outcomes of this attack, we can do:
+    #
+    #   1.d(20).distribution.results_when do |x|
+    #     if x < 16
+    #       Distribution.for_number(0)
+    #     elseif x < 20
+    #       1.d(4).distribution
+    #     else
+    #       2.d(4).distribution
+    #     end
+    #   end
+    def results_when(&block)
+      h = Hash.new{|h, k| h[k] = 0}
+      range.each do |v|
+        prob = @map[v]
+        o_dist = block.call(v)
+        o_dist.map.each do |k, v|
+          h[k] += (v * prob)
+        end
+      end
+      Distribution.new(h)
+    end
+
+    def percent_within(range)
+      percent_where{|x| range.contains? x}
+    end
+
     def percent_where(&block)
       @map.to_a
         .keep_if{|(k, v)| block.call(k)}

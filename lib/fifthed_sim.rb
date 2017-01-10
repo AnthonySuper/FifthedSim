@@ -3,6 +3,8 @@ require "fifthed_sim/dice_result"
 require "fifthed_sim/die_roll"
 require "fifthed_sim/dice_calculation"
 require "fifthed_sim/distribution"
+require "fifthed_sim/attack"
+require "fifthed_sim/monster"
 require "securerandom"
 
 module FifthedSim

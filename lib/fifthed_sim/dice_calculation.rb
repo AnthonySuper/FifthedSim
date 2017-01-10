@@ -45,14 +45,17 @@ module FifthedSim
 
     def +(other)
       check_type(other)
-      @components << other   
-      self
+      self.class.new(*@components, other)
     end
 
     def value
       # Symbol::& uses send, so refinements would break
       # How sad
       @components.map{|x| x.value}.inject(:+)
+    end
+
+    def dice
+      @components.find_all{|x| x.is_a?(DieRoll)}
     end
 
     def average
