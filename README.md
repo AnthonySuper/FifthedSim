@@ -1,8 +1,7 @@
 # FifthedSim
 
-Welcome to your new gem! In this directory, you'll find the files you need to be able to package up your Ruby library into a gem. Put your Ruby code in the file `lib/fifthed_sim`. To experiment with that code, run `bin/console` for an interactive prompt.
-
-TODO: Delete this and the text above, and describe your gem
+This is a gem to simulate a game that you play with dice on a d20 system.
+It is unfinished, but intends to enable a user to run simulations, or to see the overall probability of things which happen.
 
 ## Installation
 
@@ -22,7 +21,7 @@ Or install it yourself as:
 
 ## Usage
 
-TODO: Write usage instructions here
+See the rdoc for now.
 
 ## Development
 
@@ -32,7 +31,7 @@ To install this gem onto your local machine, run `bundle exec rake install`. To 
 
 ## Contributing
 
-Bug reports and pull requests are welcome on GitHub at https://github.com/[USERNAME]/fifthed_sim.
+Bug reports and pull requests are welcome on GitHub at https://github.com/anthonysuper/fifthedsim.
 
 
 ## License
