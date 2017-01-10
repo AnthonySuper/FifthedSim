@@ -1,9 +1,17 @@
 module FifthedSim
+  ##
+  # Models a probabilistic distribution.
   class Distribution
+    ##
+    # Get a distrubtion for a number.
+    # This will be a uniform distribution with P = 1 at this number and P = 0 elsewhere.
     def self.for_number(num)
       self.new({num => 1}, 1)
     end
 
+    ##
+    # We initialize class with a map of results to occurences, and a total number of possible different occurences.
+    # Generally, you will not ever initialize this yourself.
     def initialize(map, total_possible)
       keys = map.keys
       @max = keys.max
@@ -15,6 +23,7 @@ module FifthedSim
     attr_reader :total_possible,
       :min,
       :max
+
 
     def range
       (@max..@min)
