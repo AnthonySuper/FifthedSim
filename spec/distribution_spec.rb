@@ -2,6 +2,8 @@ require "spec_helper"
 
 RSpec.describe FifthedSim::Distribution do
   let(:two_d20) { FifthedSim::DiceResult.d(2, 20).distribution }
+  let(:d4) { 1.d(4).distribution }
+
   context "with 2 d20s" do
     subject do
       two_d20
@@ -26,7 +28,8 @@ RSpec.describe FifthedSim::Distribution do
     end
 
     it "calculates values up to a certain value" do
-      expect(subject.percent_least(39)).to eq(1.0 - unique_prob)
+      p = 1.0 - unique_prob
+      expect(subject.percent_least(39)).to be_within(0.0001).of(p)
     end
   end
 
@@ -38,7 +41,8 @@ RSpec.describe FifthedSim::Distribution do
       end
 
       it "has the right singular chance" do
-        expect(subject.percent_exactly(40)).to eq(1.0 / (20 ** 2))
+        p = (1.0 / (20 ** 2))
+        expect(subject.percent_exactly(40)).to be_within(0.0001).of(p)
       end
       it { is_expected.to eq(two_d20) }
     end
@@ -54,7 +58,7 @@ RSpec.describe FifthedSim::Distribution do
       end
       
       it "uniformly has a chance of 1 in 20" do
-        expect(subject.probability_map.values).to eq(20.times.map{1.0 / 20})
+        expect(subject.map.values).to eq(20.times.map{1.0 / 20})
       end
     end
 
@@ -66,6 +70,19 @@ RSpec.describe FifthedSim::Distribution do
 
       it "has a correct probability for 15" do
         expect(subject.percent_exactly(15)).to be_within(0.001).of(0.05)
+      end
+    end
+  end
+
+  describe "#hit_when" do
+    context "d4, pass > 2, d4" do
+      subject { d4.hit_when(d4){|x| x > 2} }
+      it "should have a proper zero value" do
+        expect(subject.percent_exactly(0)).to be_within(0.0001).of(0.5)
+      end
+
+      it "has proper non-zero values" do
+        expect(subject.percent_where{|x| x > 0}).to be_within(0.0001).of(0.5)
       end
     end
   end

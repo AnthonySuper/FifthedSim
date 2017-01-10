@@ -132,9 +132,9 @@ module FifthedSim
     def distribution
       total_possible = (dice_type ** roll_count)
       mapped = min_value.upto(max_value).map do |k|
-        [k, occurences(k)]
+        [k, (occurences(k) / total_possible.to_f)]
       end
-      Distribution.new(Hash[mapped], total_possible)
+      Distribution.new(Hash[mapped])
     end
 
     private
