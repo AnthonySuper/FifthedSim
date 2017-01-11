@@ -1,16 +1,36 @@
 module FifthedSim
   class Stat
+    class DefinitionProxy
+      def initialize(&block)
+        @hash = {}
+        instance_eval(&block)
+      end
+
+      %i(value mod_bonus save_mod).each do |e|
+        self.send(:define_method, e) do |x|
+          @hash[e] = x
+        end
+      end
+
+      attr_reader :hash
+    end
+
+    def self.define(&block)
+      h = DefinitionProxy.new(&block).hash
+      self.new(h)
+    end
+
     def initialize(hash)
       @value = hash[:value]
+      @mod_bonus = (hash[:mod_bonus] || 0)
       @save_mod = (hash[:save_mod] || mod)
     end
 
-    def mod
-      (@value - 10) / 2
-    end
+    attr_reader :value,
+      :save_mod
 
-    def save_mod
-      @save_mod
+    def mod
+      ((@value - 10) / 2) + @mod_bonus
     end
 
     def saving_throw
