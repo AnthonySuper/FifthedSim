@@ -6,26 +6,3 @@ require "fifthed_sim"
 
 require "pry"
 Pry.start
-#require 'ostruct'
-#require 'csv'
-#
-#aa = FifthedSim::Attack.define "Sword of Iron Will" do
-#  modifier 9
-#  damage 2.d(6)
-#  crit_threshold 19
-#  crit_damage (7.d(6) + 5)
-#end
-#
-#fake_monster = OpenStruct.new
-#fake_monster[:ac] = 18
-#dist = aa.hit_distribution(fake_monster)
-#
-#m = dist.map
-#
-#keys = m.keys.sort
-#CSV.open("data.csv", "wb") do |csv|
-#  csv << keys
-#  csv << keys.map{|k| m[k]}
-#end
-#
-#binding.pry

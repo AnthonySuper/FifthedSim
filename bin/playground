@@ -1,0 +1,31 @@
+#!/usr/bin/env ruby
+
+require "bundler/setup"
+require "fifthed_sim"
+
+
+require "pry"
+require 'ostruct'
+require 'csv'
+
+aa = FifthedSim::Attack.define "Sword of Iron Will" do
+  modifier 9
+  damage (2.d(6) + 5)
+  crit_threshold 19
+  crit_damage (7.d(6) + 5)
+end
+
+fake_monster = OpenStruct.new
+fake_monster[:ac] = 18
+dist = aa.hit_distribution(fake_monster)
+
+def write_csv(d, filename= "data.csv")
+  m = d.map
+  keys = m.keys.sort
+  CSV.open(filename, "wb") do |csv|
+    csv << ["Outcome", *keys]
+    csv << ["Chance", *keys.map{|k| m[k]}]
+  end
+end
+
+binding.pry

@@ -90,19 +90,24 @@ RSpec.describe FifthedSim::Distribution do
   describe "results_when" do
     let(:func) do
       proc do |x|
-        if x > 2
+        if x == 1
           FifthedSim::Distribution.for_number(0)
-        elsif x < 3
+        elsif (2..3) === x
           1.d(2).distribution
         else
-          2.d(2).distribution
+          (1.d(2) + 2).distribution
         end
       end
     end
 
     subject { 1.d(4).distribution.results_when(&func) }
-    it "has a 50% chance of being 0" do
-      expect(subject.percent_exactly(0)).to be_within(0.0001).of(0.5)
+    it "calculates a 0 properly" do
+      expect(subject.percent_exactly(0)).to be_within(0.0001).of(0.25)
+    end
+
+    it "calcualtes likelinss properly" do
+      twice = subject.percent_exactly(3) * 2
+      expect(subject.percent_exactly(1)).to be_within(0.0001).of(twice)
     end
   end
 end

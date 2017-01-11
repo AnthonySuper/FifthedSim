@@ -40,6 +40,7 @@ module FifthedSim
 
     def initialize(attrs)
       @name = attrs[:name]
+      @modifier = attrs[:modifier]
       @to_hit= 1.d(20) + attrs[:modifier]
       @damage = attrs[:damage]
       @crit_threshold = attrs[:crit_threshold]
@@ -59,7 +60,8 @@ module FifthedSim
       to_hit.distribution.results_when do |x|
         if x < ac
           Distribution.for_number(0)
-        elsif x < @crit_threshold
+        # A normal hit is greater than AC, but lower than a crit
+        elsif x > ac && x < (@crit_threshold + @modifier)
           @damage.distribution
         else
           @crit_damage.distribution
