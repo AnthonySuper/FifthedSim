@@ -49,7 +49,8 @@ module FifthedSim
     using CalculatedFixnum
 
     def initialize(*values)
-      @components = values.flatten.map{|v| check_type(v)}.flatten
+      values.each(&method(:check_type))
+      @components = values.flatten
     end
 
     def +(other)

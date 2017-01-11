@@ -1,7 +1,7 @@
 require "spec_helper"
 
 RSpec.describe FifthedSim::Distribution do
-  let(:two_d20) { FifthedSim::DiceResult.d(2, 20).distribution }
+  let(:two_d20) { FifthedSim::MultiNode.d(2, 20).distribution }
   let(:d4) { 1.d(4).distribution }
 
   context "with 2 d20s" do
@@ -34,7 +34,7 @@ RSpec.describe FifthedSim::Distribution do
   end
 
   describe "convolving a d20" do
-    let(:d20) { FifthedSim::DiceResult.d(1, 20).distribution }
+    let(:d20) { FifthedSim::MultiNode.d(1, 20).distribution }
     context "with a d20" do
       subject do
         d20.convolve(d20)

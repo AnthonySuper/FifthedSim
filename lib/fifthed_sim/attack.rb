@@ -48,7 +48,7 @@ module FifthedSim
     end
 
     def default_crit_damage
-      if @damage.is_a? DiceResult
+      if @damage.is_a? MultiNode
         (@damage + @damage)
       else
         @damage + @damage.dice
