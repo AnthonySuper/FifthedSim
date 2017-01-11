@@ -5,6 +5,57 @@
 This is a gem to simulate a game that you play with dice on a d20 system.
 It is unfinished, but intends to enable a user to run simulations, or to see the overall probability of things which happen.
 
+## Dice
+
+This gem generalizes the use of dice into *DiceExpressions*, which is an expression representing a calculation done on dice.
+These expressions have *values*, which represent one run of this expression.
+They also come with a *distribution*, which is a probabilistic distribution of the possible values of the expression.
+Perhaps an example is in order.
+Let's say that a character does `3d6 + 2d8 + 5` damage.
+We can express this easily:
+
+```ruby
+attack = 3.d(6) + 2.d(8) + 5
+```
+
+Now, let's analyze this value. First, let's see what we rolled:
+
+```ruby
+attack.value
+# => 19
+```
+
+Hm. Is that a good roll?
+
+```ruby
+attack.above_average?
+# => false
+```
+
+Guess not.
+How close were we to being average?
+
+```ruby
+attack.difference_from_average
+# => -5.5
+```
+
+That's fairly large.
+Let's see what percentile we were in:
+
+```ruby
+attack.percentile
+# => 0.13179
+```
+
+Ouch.
+That's pretty bad.
+
+
+We can do a wide variety of other things with this roll, including combining it with other rolls, as well as statistical averaging.
+More documentation is yet to come.
+
+
 ## Installation
 
 Add this line to your application's Gemfile:
@@ -34,7 +85,7 @@ To install this gem onto your local machine, run `bundle exec rake install`. To 
 ## Contributing
 
 Bug reports and pull requests are welcome on GitHub at https://github.com/anthonysuper/fifthedsim.
-
+Please see the [HelpWanted.md](HelpWanted.md) file for specific patches we are looking for.
 
 ## License
 

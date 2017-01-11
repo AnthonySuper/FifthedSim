@@ -31,6 +31,10 @@ module FifthedSim
       LessNode.new(self, other)
     end
 
+    def percentile
+      distribution.percent_least(value)
+    end
+
     def max
       distribution.max
     end
