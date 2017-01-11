@@ -65,5 +65,9 @@ module FifthedSim
     def crit?
       @value == @type
     end
+
+    def distribution
+      Distribution.for((1..@type))
+    end
   end
 end

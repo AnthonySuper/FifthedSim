@@ -11,6 +11,23 @@ module FifthedSim
       self.new({num => 1.0})
     end
 
+    def self.for_range(rng)
+      size = rng.size.to_f
+      e = 1.0 / size
+      self.new(Hash[rng.map{|x| [x, e]}])
+    end
+
+    def self.for(obj)
+      case obj
+      when Fixnum
+        self.for_number(obj)
+      when Range
+        self.for_range(obj)
+      else
+        raise ArgumentError, "can't amke a distribution for that"
+      end
+    end
+
     ##
     # We initialize class with a map of results to occurences, and a total number of possible different occurences.
     # Generally, you will not ever initialize this yourself.

@@ -19,6 +19,12 @@ module FifthedSim
       AdditionNode.new(self, other)
     end
 
+    ##
+    # Takes a block, which should take a single argument
+    # This block should return another DiceExpression type, based on the result of this DiceExpression.
+    def test_then(&block)
+      BlockNode.new(self, &block)
+    end
 
     {"above_" => :>, "below_" => :<, "" => :==}.each do |k,v|
       define_method "#{k}average?" do
@@ -33,9 +39,14 @@ module FifthedSim
     def difference_from_average
       value - average
     end
+
+    def range
+      distribution.range
+    end
   end
 end
 
 require_relative './nodes/multi_node'
 require_relative './nodes/addition_node'
 require_relative './nodes/roll_node'
+require_relative './nodes/block_node'

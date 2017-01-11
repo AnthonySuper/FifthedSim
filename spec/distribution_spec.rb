@@ -4,6 +4,18 @@ RSpec.describe FifthedSim::Distribution do
   let(:two_d20) { FifthedSim::MultiNode.d(2, 20).distribution }
   let(:d4) { 1.d(4).distribution }
 
+  describe "range construction" do
+    context "with range 1..2" do
+      subject { described_class.for_range(1..2) }
+      it "has a 50% chance of being 1" do
+        expect(subject.percent_exactly(1)).to be_within(0.0001).of(0.5)
+      end
+      it "has a 50% chance of being 2" do
+        expect(subject.percent_exactly(2)).to be_within(0.0001).of(0.5)
+      end
+    end
+  end
+
   context "with 2 d20s" do
     subject do
       two_d20
