@@ -13,11 +13,11 @@ module FifthedSim
         else
           [k, Stat.new(v)]
         end
-      end
+      end]
     end
 
     STAT_TYPES.each do |st|
-      self.define_method(st) do
+      self.send(:define_method, st) do
         @hash[st]
       end
     end
