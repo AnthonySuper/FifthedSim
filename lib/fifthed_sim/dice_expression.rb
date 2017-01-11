@@ -19,6 +19,22 @@ module FifthedSim
       AdditionNode.new(self, other)
     end
 
+    def /(other)
+      DivisionNode.new(self, other)
+    end
+
+    def or_greater(other)
+      GreaterNode.new(self, other)
+    end
+
+    def max
+      distribution.max
+    end
+
+    def min
+      distribution.min
+    end
+
     ##
     # Takes a block, which should take a single argument
     # This block should return another DiceExpression type, based on the result of this DiceExpression.
@@ -50,3 +66,5 @@ require_relative './nodes/multi_node'
 require_relative './nodes/addition_node'
 require_relative './nodes/roll_node'
 require_relative './nodes/block_node'
+require_relative './nodes/division_node'
+require_relative './nodes/greater_node.rb'

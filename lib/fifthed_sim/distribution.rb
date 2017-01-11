@@ -142,6 +142,12 @@ module FifthedSim
       @min.upto(num).map(&map_proc).inject(:+)
     end
 
+    def percent_greater(num)
+      return 0 if num > @max
+      return 1 if num >= @min
+      num.upto(@max).map(&map_proc).inject(:+)
+    end
+
     def convolve(other)
       h = {}
       abs_min = [@min, other.min].min
@@ -158,14 +164,63 @@ module FifthedSim
       self.class.new(Hash[v])
     end
 
+    ##
+    # Get the distribution of a result from this distribution divided by
+    # one from another distribution.
+    # If the other distribution may contain zero this will break horribly.
+    def convolve_divide(other)
+      throw ArgumentError, "Divisor may be zero" if other.min < 1
+      h = Hash.new{|h, k| h[k] = 0}
+      # We can do this faster using a sieve, but be lazy for now
+      # TODO: Be less lazy
+      range.each do |v1|
+        other.range.each do |v2|
+          h[v1 / v2] += percent_exactly(v1) * other.percent_exactly(v2)
+        end
+      end
+      self.class.new(h)
+    end
+
+    def convolve_greater(other)
+      h = Hash.new{|h, k| h[k] = 0}
+      # for each value
+      range.each do |s|
+        (s..other.max).each do |e|
+          h[e] += (other.percent_exactly(e) * percent_exactly(s))
+        end
+        h[s] += (other.percent_least(s - 1) * percent_exactly(s))
+      end
+      self.class.new(h)
+    end
+
+    def convolve_less(other)
+      h = Hash.new{|h, k| h[k] = 0}
+      range.each do |s|
+        (other.min..s).each do |e|
+          h[e] += (other.percent_exactly(e) * percent_exactly(s))
+        end
+        h[s] += (other.percent_greater(s + 1) * percent_exactly(s))
+      end
+    end
+
     COMPARE_EPSILON = 0.00001
     def ==(other)
       omap = other.map
+      max_possible = (@max / other.min)
       same_keys = (Set.new(@map.keys) == Set.new(omap.keys))
       same_vals = @map.keys.each do |k|
         (@map[k] - other.map[k]).abs <= COMPARE_EPSILON
       end
       same_keys && same_vals
+    end
+
+    def text_histogram(cols = 60)
+      max_width = @max.to_s.length
+      justwidth = max_width + 1
+      linewidth = (cols - justwidth)
+      range.map do |v|
+        "#{v}:".rjust(justwidth) + ("*" * (percent_exactly(v) * linewidth))
+      end.join("\n")
     end
 
     private
