@@ -1,8 +1,8 @@
 require 'spec_helper'
 
-RSpec.describe FifthedSim::DiceResult do
+RSpec.describe FifthedSim::MultiNode do
   describe "initialization" do
-    subject { FifthedSim::DiceResult.method(:new) }
+    subject { described_class.method(:new) }
 
     it "requires an array" do
       expect { subject.call(1) }.to raise_error(ArgumentError)
@@ -18,7 +18,7 @@ RSpec.describe FifthedSim::DiceResult do
 
     it "works with an array of dierolls" do
       expect do 
-        subject.call([FifthedSim::DieRoll.roll(20)]) 
+        subject.call([FifthedSim::RollNode.new(1, 20)]) 
       end.to_not raise_error
     end
   end
@@ -37,8 +37,8 @@ RSpec.describe FifthedSim::DiceResult do
 
   context "with a crit and an average roll" do
     subject do 
-      described_class.new([FifthedSim::DieRoll.new(20, 20),
-                           FifthedSim::DieRoll.new(10, 20)])
+      described_class.new([FifthedSim.make_roll(20, 20),
+                           FifthedSim.make_roll(10, 20)])
     end
     it { is_expected.to have_crit }
     it { is_expected.to_not have_critfail }
@@ -53,8 +53,8 @@ RSpec.describe FifthedSim::DiceResult do
 
   context "with a critfail and an average roll" do
     subject do
-      described_class.new([FifthedSim::DieRoll.new(1, 20),
-                           FifthedSim::DieRoll.new(10, 20)])
+      described_class.new([FifthedSim.make_roll(1, 20),
+                           FifthedSim.make_roll(10, 20)])
     end
 
     it { is_expected.to_not have_crit }
@@ -69,8 +69,8 @@ RSpec.describe FifthedSim::DiceResult do
 
   context "one critfail and one crit" do
     subject do
-      described_class.new([FifthedSim::DieRoll.new(1, 20),
-                           FifthedSim::DieRoll.new(20, 20)])
+      described_class.new([FifthedSim.make_roll(1, 20),
+                           FifthedSim.make_roll(20, 20)])
     end
     it { is_expected.to have_crit }
     it { is_expected.to have_critfail }
@@ -81,11 +81,11 @@ RSpec.describe FifthedSim::DiceResult do
 
   describe "+" do
     subject do
-      described_class.new([FifthedSim::DieRoll.new(10, 20)]).method(:+)
+      described_class.new([FifthedSim.make_roll(10, 20)]).method(:+)
     end
 
     it "returns a calculated value" do
-      expect(subject.call(10)).to be_kind_of(FifthedSim::DiceCalculation)
+      expect(subject.call(10)).to be_kind_of(FifthedSim::DiceExpression)
     end
   end
 

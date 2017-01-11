@@ -1,5 +1,5 @@
-require_relative './helpers/average_comparison'
-require_relative './distribution'
+require_relative '../distribution'
+require_relative '../dice_expression'
 
 ##
 # We sneakily monkey-patch Fixnum here, to allow us to use a nice syntax
@@ -8,7 +8,6 @@ require_relative './distribution'
 # We only do this if somebody hasn't done it already, in case ruby adds this to the standard one day.
 class Fixnum
   unless self.instance_methods(:false).include?(:factorial)
-
     ## 
     # Mathematical factorial
     def factorial
@@ -26,17 +25,13 @@ end
 
 module FifthedSim
   ##
-  # This class models the result of a dice roll.
+  # This class models the result of a roll of multiple dice.
   # It is filled with the actual result of randomly-rolled dice, but contains
   # methods to enable the calculation of average values.
-  # 
-  # When you add a modifier it becomes a DiceCalculation.
-  class DiceResult
+  class MultiNode < DiceExpression
     def self.d(num, type)
-      self.new(num.times.map{DieRoll.roll(type)})
+      self.new(num.times.map{RollNode.roll(type)})
     end
-
-    include AverageComparison
 
     ## 
     # Generally, don't calculate this yourself
@@ -44,10 +39,14 @@ module FifthedSim
       unless array.is_a?(Array) && ! array.empty?
         raise ArgumentError, "Not a valid array"
       end
-      unless array.all?{|elem| elem.is_a?(DieRoll) }
+      unless array.all?{|elem| elem.is_a?(RollNode) }
         raise ArgumentError, "Not all die rolls"
       end
       @array = array
+    end
+
+    def reroll
+      self.class.new(@array.map(&:reroll))
     end
 
     ##
@@ -62,7 +61,6 @@ module FifthedSim
       @array.any?(&:critfail?)
     end
 
-
     ##
     # What is the theoretical average value when we roll this many dice?
     def average
@@ -76,30 +74,10 @@ module FifthedSim
       @array.dup
     end
 
-    ## 
-    # Convert this roll of dice to an int
-    def to_i
-      @array.map(&:to_i).inject(:+)
-    end
-
-    ##
-    # Convert this roll of dice to a float
-    def to_f
-      to_i.to_f
-    end
-
     ##
     # Calculate the value of these dice
     def value
-      to_i
-    end
-
-    ##
-    # Add some more dice or a modifier.
-    # In this case, addition will turn the expression into a DiceCalculation.
-    def +(other)
-      a = DiceCalculation.new(self)
-      (a + other)
+      @array.map(&:value).inject(:+)
     end
 
     ##

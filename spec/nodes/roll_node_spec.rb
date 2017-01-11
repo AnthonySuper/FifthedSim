@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-RSpec.describe FifthedSim::DieRoll do
+RSpec.describe FifthedSim::RollNode do
   describe "#roll" do
     it "fails when given a float" do
       expect{subject.roll(1.1)}.to raise_error(ArgumentError)
@@ -9,12 +9,12 @@ RSpec.describe FifthedSim::DieRoll do
 
   describe "#average" do
     it "gives an average value" do
-      expect(FifthedSim::DieRoll.average(20).value).to eq(10)
+      expect(described_class.average(20).value).to eq(10)
     end
   end
 
   context "with critfails" do
-    subject { FifthedSim::DieRoll.new(1, 20) }
+    subject { described_class.new(1, 20) }
     it { is_expected.to be_critfail }
     it { is_expected.to_not be_crit }
     it { is_expected.to be_below_average }
@@ -31,7 +31,7 @@ RSpec.describe FifthedSim::DieRoll do
   end
 
   context "with crits" do
-    subject { FifthedSim::DieRoll.new(20, 20) }
+    subject { described_class.new(20, 20) }
     it { is_expected.to be_crit }
     it { is_expected.to_not be_critfail }
     it { is_expected.to_not be_below_average } 

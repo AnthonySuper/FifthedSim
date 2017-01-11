@@ -1,9 +1,7 @@
-require_relative './helpers/average_comparison'
+require_relative '../dice_expression'
 
 module CalculatedFixnum
   refine Fixnum do
-    include FifthedSim::AverageComparison
-
     def value
       self
     end
@@ -27,15 +25,27 @@ module CalculatedFixnum
     def distribution
       FifthedSim::Distribution.for_number(self)
     end
+
+    def average?
+      true
+    end
+
+    def below_average?
+      false
+    end
+
+    def above_average?
+      false
+    end
+
+    def difference_from_average
+      0
+    end
   end
 end
 
-
-
-
 module FifthedSim
-  class DiceCalculation
-    include AverageComparison
+  class AdditionNode < DiceExpression
     using CalculatedFixnum
 
     def initialize(*values)
@@ -56,7 +66,7 @@ module FifthedSim
     def dice
       require 'pry'
       binding.pry
-      self.class.new(*@components.find_all{|x| x.is_a?(DieRoll)})
+      self.class.new(*@components.find_all{|x| x.is_a?(RollNode)})
     end
 
     def average
@@ -80,18 +90,12 @@ module FifthedSim
 
 
     private
-    ALLOWED_TYPES = [DiceResult,
-                     Fixnum,
-                     DiceCalculation]
+    ALLOWED_TYPES = [DiceExpression,
+                     Fixnum]
 
     def check_type(obj)
-      case obj
-      when Fixnum, DiceResult
-        obj
-      when DiceCalculation
-        obj.components
-      else
-        raise TypeError, "Did not expect type #{obj.inspect}"
+      unless ALLOWED_TYPES.any?{|x| obj.is_a?(x)}
+        raise TypeError, "Not an allowed node type"
       end
     end  
   end

@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-RSpec.describe FifthedSim::DiceCalculation do
+RSpec.describe FifthedSim::AdditionNode do
   describe "initialization" do
     it "fails with non-member types" do
       expect{described_class.new("")}.to raise_error(TypeError)
@@ -9,21 +9,21 @@ RSpec.describe FifthedSim::DiceCalculation do
 
   %w(1 10 20).each do |v|
     let("d20_#{v}".to_sym) do
-      FifthedSim::DieRoll.new(v.to_i, 20)
+      FifthedSim::RollNode.new(v.to_i, 20)
     end
 
     let("d20_#{v}_r".to_sym) do
-      FifthedSim::DiceResult.new([self.send("d20_#{v}".to_sym)])
+      FifthedSim::MultiNode.new([self.send("d20_#{v}".to_sym)])
     end
   end
 
   %w(1 3 6).each do |v|
     let("d6_#{v}".to_sym) do
-      FifthedSim::DieRoll.new(v.to_i, 6)
+      FifthedSim::RollNode.new(v.to_i, 6)
     end
 
     let("d6_#{v}_r".to_sym) do
-      FifthedSim::DiceResult.new([self.send("d20_#{v}".to_sym)])
+      FifthedSim::MultiNode.new([self.send("d20_#{v}".to_sym)])
     end
   end
 

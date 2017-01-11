@@ -1,12 +1,11 @@
-require_relative './helpers/average_comparison'
+require_relative '../dice_expression.rb'
 
 module FifthedSim
   ##
   # Model a single roll of the dice.
   # Users of the library will rarely interact with this class, and will instead manpiulate values based on the DiceResult type.
   #
-  class DieRoll
-    include AverageComparison
+  class RollNode < DiceExpression
 
     ##
     # Create a diceresult by rolling a certain type.
@@ -37,6 +36,10 @@ module FifthedSim
       @type = type
     end
 
+    def reroll
+      self.class.roll(@type)
+    end
+
     attr_reader :value, :type
 
     ##
@@ -61,28 +64,6 @@ module FifthedSim
     # Is this roll a critical? (AKA, is it the max value of the dice?)
     def crit?
       @value == @type
-    end
-
-    ##
-    # Convert this roll to its integer value
-    def to_i
-      @value
-    end
-
-    ##
-    # Convert this roll to its floating-point value
-    def to_f
-      @value.to_f
-    end
-
-    ## 
-    # Forward all other methods to the integer method itself
-    def method_missing(method, *args, **kwards, &block)
-      if @value.respond_to? method
-        @value.public_send(method,*args,**kwards,&block)
-      else
-        super
-      end 
     end
   end
 end
