@@ -5,6 +5,7 @@ require "fifthed_sim/dice_calculation"
 require "fifthed_sim/distribution"
 require "fifthed_sim/attack"
 require "fifthed_sim/monster"
+require "fifthed_sim/stat_block"
 require "securerandom"
 
 module FifthedSim
