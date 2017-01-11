@@ -1,4 +1,6 @@
 # FifthedSim
+[![Build Status](https://travis-ci.org/AnthonySuper/FifthedSim.svg?branch=master)](https://travis-ci.org/AnthonySuper/FifthedSim)
+
 
 This is a gem to simulate a game that you play with dice on a d20 system.
 It is unfinished, but intends to enable a user to run simulations, or to see the overall probability of things which happen.
