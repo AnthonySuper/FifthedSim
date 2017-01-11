@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-RSpec.describe FifthedSim::LeastNode do
+RSpec.describe FifthedSim::LessNode do
   context "with a critfail d2 and a crit d2" do
     subject do
       described_class.new(FifthedSim.make_roll(1, 2),

@@ -28,7 +28,7 @@ module FifthedSim
     end
 
     def or_least(other)
-      LeastNode.new(self, other)
+      LessNode.new(self, other)
     end
 
     def max
@@ -72,4 +72,4 @@ require_relative './nodes/roll_node'
 require_relative './nodes/block_node'
 require_relative './nodes/division_node'
 require_relative './nodes/greater_node'
-require_relative './nodes/least_node'
+require_relative './nodes/less_node'

@@ -123,7 +123,7 @@ module FifthedSim
       0.upto((num - num_dice) / dice_type).map do |k|
         ((-1) ** k) * 
           combination(num_dice, k) *
-          combination(num - dice_type*k - 1, num_dice- 1)
+          combination(num - (dice_type*k) - 1, num_dice- 1)
       end.inject(:+)
     end
   end
