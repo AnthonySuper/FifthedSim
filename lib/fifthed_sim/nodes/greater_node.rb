@@ -19,5 +19,13 @@ module FifthedSim
     def reroll
       self.class.new(@lhs.reroll, @rhs.reroll)
     end
+
+    def min
+      [@lhs.min, @rhs.min].max
+    end
+
+    def max
+      [@lhs.max, @rhs.max].max
+    end
   end
 end

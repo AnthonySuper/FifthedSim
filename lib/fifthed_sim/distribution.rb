@@ -193,7 +193,7 @@ module FifthedSim
       self.class.new(h)
     end
 
-    def convolve_less(other)
+    def convolve_least(other)
       h = Hash.new{|h, k| h[k] = 0}
       range.each do |s|
         (other.min..s).each do |e|

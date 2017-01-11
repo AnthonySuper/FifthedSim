@@ -27,6 +27,10 @@ module FifthedSim
       GreaterNode.new(self, other)
     end
 
+    def or_least(other)
+      LeastNode.new(self, other)
+    end
+
     def max
       distribution.max
     end
@@ -57,7 +61,7 @@ module FifthedSim
     end
 
     def range
-      distribution.range
+      (min..max)
     end
   end
 end
@@ -67,4 +71,5 @@ require_relative './nodes/addition_node'
 require_relative './nodes/roll_node'
 require_relative './nodes/block_node'
 require_relative './nodes/division_node'
-require_relative './nodes/greater_node.rb'
+require_relative './nodes/greater_node'
+require_relative './nodes/least_node'
