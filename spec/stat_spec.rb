@@ -22,4 +22,24 @@ RSpec.describe FifthedSim::Stat do
       end
     end
   end
+
+  context "with a dictionary definition" do
+    let(:attributes) do
+      {
+        value: 20,
+        mod_bonus: 2,
+        save_mod: 10
+      }
+    end
+
+    subject do
+      described_class.new(attributes)
+    end
+
+    it "works" do
+      expect{subject}.to_not raise_error
+    end
+
+    it { is_expected.to have_attributes(attributes) }
+  end
 end

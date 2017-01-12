@@ -27,7 +27,8 @@ module FifthedSim
     end
 
     attr_reader :value,
-      :save_mod
+      :save_mod,
+      :mod_bonus
 
     def mod
       ((@value - 10) / 2) + @mod_bonus

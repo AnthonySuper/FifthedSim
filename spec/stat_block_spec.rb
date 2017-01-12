@@ -2,7 +2,7 @@ require 'spec_helper'
 
 RSpec.describe FifthedSim::StatBlock do
   context "with a valid defintion" do
-    subject do
+    let(:statblock) do
       described_class.define do
         str do
           value 10
@@ -19,7 +19,7 @@ RSpec.describe FifthedSim::StatBlock do
         end
         int do
           value 14
-          mod_bonus 1
+          mod_bonus 5
         end
         wis do 
           value 8
@@ -27,8 +27,16 @@ RSpec.describe FifthedSim::StatBlock do
       end
     end
 
+    subject { statblock } 
+
     it "is valid" do
       expect{subject}.to_not raise_error
+    end
+
+    describe ".int" do
+      subject { statblock.int }
+      it { is_expected.to be_a(FifthedSim::Stat) }
+      it { is_expected.to have_attributes(value: 14, mod_bonus: 5) }
     end
   end
 end
