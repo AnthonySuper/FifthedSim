@@ -1,5 +1,5 @@
 module FifthedSim
-  class Monster
+  class Actor
     class DefinitionProxy
       def initialize(name, &block)
         @attrs = {

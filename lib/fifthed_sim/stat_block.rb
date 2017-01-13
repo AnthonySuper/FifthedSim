@@ -1,13 +1,14 @@
 require_relative './stat'
 
 module FifthedSim
+  STAT_TYPES = [:str,
+                :dex,
+                :wis,
+                :cha,
+                :con,
+                :int]
   class StatBlock
-    STAT_TYPES = [:str,
-                  :dex,
-                  :wis,
-                  :cha,
-                  :con,
-                  :int]
+
 
     class DefinitionProxy
       def initialize(&block)
