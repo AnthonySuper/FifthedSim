@@ -5,7 +5,7 @@ module FifthedSim
         @attrs = {
           name: name,
           attacks: {},
-          spells: [],
+          spells: {},
           ac: 0
         }
         instance_eval(&block)
@@ -14,12 +14,22 @@ module FifthedSim
       attr_reader :attrs
 
       def attack(name, &block)
-        if block_given && name.is_a?(String)
+        if block_given? && name.is_a?(String)
           @attrs[:attacks][name] = Attack.define(name, &block)
         elsif name.is_a?(Attack)
           @attrs[:attacks][name.name] << name
         else
           raise ArgumentError, "must be an attack"
+        end
+      end
+
+      def spell(name, &block)
+        if block_given? && name.is_a?(String)
+          @attrs[:spells][name] = Spell.define(name, &block)
+        elsif name.is_a?(Spell)
+          @attrs[:spells][name.name] << name
+        else
+          raise ArgumentError, "must be a spell"
         end
       end
 
