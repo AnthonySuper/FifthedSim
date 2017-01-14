@@ -40,6 +40,8 @@ RSpec.describe FifthedSim::MultiNode do
       described_class.new([FifthedSim.make_roll(20, 20),
                            FifthedSim.make_roll(10, 20)])
     end
+    let(:node) { subject }
+    it_behaves_like "dice expression"
     it { is_expected.to have_crit }
     it { is_expected.to_not have_critfail }
     it { is_expected.to be_above_average }

@@ -1,4 +1,5 @@
 require 'spec_helper'
+require "shared_examples/dice_expression"
 
 RSpec.describe FifthedSim::RollNode do
   describe "#roll" do
@@ -15,6 +16,8 @@ RSpec.describe FifthedSim::RollNode do
 
   context "with critfails" do
     subject { described_class.new(1, 20) }
+    let(:node) { subject }
+    it_behaves_like "dice expression"
     it { is_expected.to be_critfail }
     it { is_expected.to_not be_crit }
     it { is_expected.to be_below_average }

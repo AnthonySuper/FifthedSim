@@ -1,4 +1,5 @@
 require 'spec_helper'
+require "shared_examples/dice_expression"
 
 RSpec.describe FifthedSim::DivisionNode do
   context "with a crit d2 and a 2" do
@@ -6,6 +7,7 @@ RSpec.describe FifthedSim::DivisionNode do
       described_class.new(FifthedSim::RollNode.new(2, 2), 2)
     end
     subject{ node }
+    it_behaves_like "dice expression"
 
     it "has a value of 1" do
       expect(subject.value).to eq(1)

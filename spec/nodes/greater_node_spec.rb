@@ -1,4 +1,5 @@
 require 'spec_helper'
+require "shared_examples/dice_expression"
 
 RSpec.describe FifthedSim::GreaterNode do
   context "with a critfail d2 and a crit d2" do
@@ -7,6 +8,7 @@ RSpec.describe FifthedSim::GreaterNode do
                           FifthedSim.make_roll(1, 2))
     end
     subject { node }
+    it_behaves_like "dice expression"
 
     it { is_expected.to have_attributes(value: 2, min: 1, max: 2) }
 

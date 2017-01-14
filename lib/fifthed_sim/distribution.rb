@@ -165,6 +165,18 @@ module FifthedSim
     end
 
     ##
+    # TODO: Optimize this
+    def convolve_subtract(other)
+      h = Hash.new{|h, k| h[k] = 0}
+      range.each do |v1|
+        other.range.each do |v2|
+          h[v1 - v2] += percent_exactly(v1) * other.percent_exactly(v2)
+        end
+      end
+      self.class.new(h)
+    end
+
+    ##
     # Get the distribution of a result from this distribution divided by
     # one from another distribution.
     # If the other distribution may contain zero this will break horribly.

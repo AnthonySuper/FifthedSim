@@ -8,16 +8,24 @@ require "pry"
 require 'ostruct'
 require 'csv'
 
-aa = FifthedSim::Attack.define "Sword of Iron Will" do
-  modifier 9
-  damage (2.d(6) + 5)
+iron_will = FifthedSim::Attack.define "Sword of Iron Will" do
+  to_hit 9
+  damage do
+    slashing 2.d(6) + 5
+  end
   crit_threshold 19
-  crit_damage (7.d(6) + 5)
+  crit_damage do 
+    slashing 7.d(6) + 5
+  end
 end
 
-fake_monster = OpenStruct.new
-fake_monster[:ac] = 18
-dist = aa.hit_distribution(fake_monster)
+class FakeMonster 
+  def initialize(ac = 18); @ac = ac; end;
+  def resistant_to?(_); false; end;
+  def immune_to?(_); false; end;
+  attr_accessor :ac
+end
+
 
 def write_csv(d, filename= "data.csv")
   m = d.map
@@ -27,5 +35,8 @@ def write_csv(d, filename= "data.csv")
     csv << ["Chance", *keys.map{|k| m[k]}]
   end
 end
+
+
+hit = iron_will.against(FakeMonster.new)
 
 binding.pry

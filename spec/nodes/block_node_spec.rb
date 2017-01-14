@@ -1,4 +1,5 @@
 require 'spec_helper'
+require "shared_examples/dice_expression"
 
 RSpec.describe FifthedSim::BlockNode do
   context "Roll a d4, 0 on 1, 1d4 on 2..3, 1d4+4 on 4" do
@@ -13,6 +14,8 @@ RSpec.describe FifthedSim::BlockNode do
         end
       end
     end
+    let(:node) { subject }
+    it_behaves_like "dice expression"
     it { is_expected.to be_a(FifthedSim::DiceExpression) }
     it { is_expected.to respond_to(:distribution) }
     it { is_expected.to respond_to(:reroll) }

@@ -1,4 +1,5 @@
 require 'spec_helper'
+require "shared_examples/dice_expression"
 
 RSpec.describe FifthedSim::LessNode do
   context "with a critfail d2 and a crit d2" do
@@ -6,6 +7,8 @@ RSpec.describe FifthedSim::LessNode do
       described_class.new(FifthedSim.make_roll(1, 2),
                           FifthedSim.make_roll(2, 2))
     end
+    let(:node) { subject }
+    it_behaves_like "dice expression"
     it { is_expected.to have_attributes(value: 1, min: 1, max: 2)}
   end
 

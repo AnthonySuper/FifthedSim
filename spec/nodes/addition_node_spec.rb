@@ -1,10 +1,16 @@
 require 'spec_helper'
+require "shared_examples/dice_expression"
 
 RSpec.describe FifthedSim::AdditionNode do
   describe "initialization" do
     it "fails with non-member types" do
       expect{described_class.new("")}.to raise_error(TypeError)
     end
+  end
+
+  context "with an example node" do
+    let(:node) { 1.d(20) + 2 }
+    include_examples "dice expression"
   end
 
   %w(1 10 20).each do |v|
