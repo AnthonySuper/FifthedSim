@@ -62,12 +62,13 @@ RSpec.shared_examples "dice expression" do
   [:+, :-, :/, :*].each do |meth|
 
     describe ".#{meth}" do
+      let(:exp) { node.public_send(meth, 1.d(4)) }
       it "works" do
-        expect{node.public_send(meth, 1.d(4))}.to_not raise_error
+        expect{exp}.to_not raise_error
       end
 
-      it "returns a DiceExpression" do
-        expect(node.public_send(meth, 1.d(4))).to be_a(FifthedSim::DiceExpression)
+      it "is a dice expression" do
+        expect(exp).to be_a(FifthedSim::DiceExpression)
       end
     end
   end
