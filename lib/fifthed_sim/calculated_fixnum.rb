@@ -40,6 +40,10 @@ module FifthedSim
       def difference_from_average
         0
       end
+
+      def reroll
+        self
+      end
     end
   end
 end

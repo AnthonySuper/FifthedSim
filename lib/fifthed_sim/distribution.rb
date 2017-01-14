@@ -181,6 +181,17 @@ module FifthedSim
       self.class.new(h)
     end
 
+    def convolve_multiply(other)
+      h = Hash.new{|h, k| h[k] = 0}
+      range.each do |v1|
+        other.range.each do |v2|
+          h[v1 * v2] += percent_exactly(v1) * other.percent_exactly(v2)
+        end
+      end
+      self.class.new(h)
+    end
+
+
     def convolve_greater(other)
       h = Hash.new{|h, k| h[k] = 0}
       # for each value
@@ -201,6 +212,7 @@ module FifthedSim
         end
         h[s] += (other.percent_greater(s + 1) * percent_exactly(s))
       end
+      self.class.new(h)
     end
 
     COMPARE_EPSILON = 0.00001

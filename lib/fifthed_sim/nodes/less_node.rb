@@ -13,6 +13,10 @@ module FifthedSim
       [@lhs.value, @rhs.value].min
     end
 
+    def reroll
+      self.class.new(@lhs.reroll, @rhs.reroll)
+    end
+
     def max
       [@lhs.max, @rhs.max].min
     end
@@ -24,6 +28,5 @@ module FifthedSim
     def distribution
       @lhs.distribution.convolve_least(@rhs.distribution)
     end
-
   end
 end

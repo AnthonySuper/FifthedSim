@@ -68,10 +68,10 @@ module FifthedSim
     end
 
     def against(other)
-      to_hit.test_then do |res|
-        if res < ac
+      hit_roll.test_then do |res|
+        if res < other.ac
           0.to_dice_expression
-        elsif x > ac && x < (@crit_threshold + @modifier)
+        elsif res > other.ac && res < (@crit_threshold + @to_hit)
           @damage.to(other)
         else
           @crit_damage.to(other)

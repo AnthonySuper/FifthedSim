@@ -23,6 +23,10 @@ module FifthedSim
       DivisionNode.new(self, other)
     end
 
+    def *(other)
+      MultiplicationNode.new(self, other)
+    end
+
     def or_greater(other)
       GreaterNode.new(self, other)
     end
@@ -86,3 +90,4 @@ require_relative './nodes/division_node'
 require_relative './nodes/greater_node'
 require_relative './nodes/less_node'
 require_relative './nodes/number_node'
+require_relative './nodes/multiplication_node'
