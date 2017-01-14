@@ -14,7 +14,7 @@ module FifthedSim
 
       %i(damage save_damage).each do |m|
         self.send(:define_method, m) do |damage = nil, &block|
-          if block_given?
+          if block
             @hash[m] = Damage.define(&block)
           elsif damage.is_a?(Damage)
             @hash[m] = damage
@@ -31,6 +31,15 @@ module FifthedSim
       def save_type(n)
         @hash[:save_type] = n
       end
+
+      def attrs
+        @hash
+      end
+    end
+
+    def self.define(name, &block)
+      h = DefinitionProxy.new(name, &block).attrs
+      self.new(h)
     end
 
     def initialize(hash)
