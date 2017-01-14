@@ -9,7 +9,7 @@ module FifthedSim
     def initialize(arg, &block)
       @arg = arg
       @block = block
-      @current_value = block.call(arg.value)
+      @current_value = block.call(arg.value).value
     end
 
     def value
@@ -17,7 +17,7 @@ module FifthedSim
     end
 
     def reroll
-      self.class.new(@arg.reroll, &block)
+      self.class.new(@arg.reroll, &@block)
     end
 
     def distribution

@@ -22,8 +22,6 @@ module FifthedSim
     end
 
     def dice
-      require 'pry'
-      binding.pry
       self.class.new(*@components.find_all{|x| x.is_a?(RollNode)})
     end
 
@@ -46,14 +44,18 @@ module FifthedSim
       end
     end
 
+    def reroll
+      self.class.new(*@components.map{|x| x.reroll})
+    end
+
 
     private
     ALLOWED_TYPES = [DiceExpression,
                      Fixnum]
 
     def check_type(obj)
-      unless ALLOWED_TYPES.any?{|x| obj.is_a?(x)}
-        raise TypeError, "Not an allowed node type"
+      unless ALLOWED_TYPES.any?{|x| obj.kind_of?(x)}
+        raise TypeError, "#{obj.inspect} is not a DiceExpression"
       end
     end  
   end
