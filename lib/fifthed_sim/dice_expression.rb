@@ -70,6 +70,14 @@ module FifthedSim
   end
 end
 
+##
+# Allow .to_dice_expression on Fixnum
+class Fixnum
+  def to_dice_expression
+    FifthedSim::NumberNode.new(self)
+  end
+end
+
 require_relative './nodes/multi_node'
 require_relative './nodes/addition_node'
 require_relative './nodes/roll_node'
@@ -77,3 +85,4 @@ require_relative './nodes/block_node'
 require_relative './nodes/division_node'
 require_relative './nodes/greater_node'
 require_relative './nodes/less_node'
+require_relative './nodes/number_node'

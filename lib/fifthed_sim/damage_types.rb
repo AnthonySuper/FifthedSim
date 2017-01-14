@@ -16,24 +16,24 @@ module FifthedSim
     end
 
     def self.valid_damage_type?(sym)
-      DAMAGE_TYPE_LIST.include? sym
+      DAMAGE_TYPES.include? sym
     end
-    
+
     class InvalidDamageType < StandardError
     end
   end
 
-  DAMAGE_TYPE_LIST = %i(slashing
-                        bludgeoning
-                        piercing
-                        fire
-                        cold
-                        poison
-                        acid
-                        psychic
-                        necrotic
-                        radiant
-                        lightning
-                        thunder
-                        force)
+  DAMAGE_TYPES = %i(slashing
+                    bludgeoning
+                    piercing
+                    fire
+                    cold
+                    poison
+                    acid
+                    psychic
+                    necrotic
+                    radiant
+                    lightning
+                    thunder
+                    force)
 end

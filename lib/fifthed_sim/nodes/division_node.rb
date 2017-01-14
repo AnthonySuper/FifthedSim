@@ -3,6 +3,7 @@ require_relative '../calculated_fixnum'
 module FifthedSim
   class DivisionNode < DiceExpression
     using CalculatedFixnum
+
     def initialize(num, div)
       @num = num
       @div = div

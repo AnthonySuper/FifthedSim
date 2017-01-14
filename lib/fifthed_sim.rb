@@ -5,6 +5,7 @@ require "fifthed_sim/attack"
 require "fifthed_sim/actor"
 require "fifthed_sim/stat_block"
 require "fifthed_sim/damage_types"
+require "fifthed_sim/damage"
 require "securerandom"
 
 module FifthedSim
