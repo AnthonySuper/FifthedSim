@@ -1,3 +1,4 @@
+require_relative './damage'
 module FifthedSim
   ##
   # Model an attack vs AC
@@ -6,7 +7,7 @@ module FifthedSim
       def initialize(name, &block)
         @attrs = {
           name: name,
-          modifier: "",
+          to_hit: 0,
           damage: nil,
           crit_threshold: 20,
           crit_damage: nil
@@ -16,20 +17,36 @@ module FifthedSim
 
       attr_reader :attrs
 
-      def modifier(num)
-        @attrs[:modifier] = num
+      def to_hit(num)
+        @attrs[:to_hit] = num
       end
 
-      def damage(dmg)
-        @attrs[:damage] = dmg
+      def damage(arg = nil, &block)
+        if block_given?
+          @attrs[:damage] = Damage.define(&block)
+        else
+          damage_check(arg)
+          @attrs[:damage] = arg
+        end
+      end
+
+      def crit_damage(arg = nil, &block)
+        if block_given?
+          @attrs[:crit_damage] = Damage.define(&block)
+        else
+          damage_check(arg)
+        end
       end
 
       def crit_threshold(thr)
         @attrs[:crit_threshold] = thr
       end
 
-      def crit_damage(cr)
-        @attrs[:crit_damage] = cr
+      protected
+      def damage_check(arg)
+        unless arg.is_a? Damage
+          raise TypeError, "#{arg.inspect} is not Damage"
+        end
       end
     end
 
@@ -40,35 +57,30 @@ module FifthedSim
 
     def initialize(attrs)
       @name = attrs[:name]
-      @modifier = attrs[:modifier]
-      @to_hit= 1.d(20) + attrs[:modifier]
+      @to_hit = attrs[:to_hit]
       @damage = attrs[:damage]
       @crit_threshold = attrs[:crit_threshold]
-      @crit_damage = (attrs[:crit_damage] || default_crit_damage)
+      @crit_damage = attrs[:crit_damage]
     end
 
-    def default_crit_damage
-      if @damage.is_a? MultiNode
-        (@damage + @damage)
-      else
-        @damage + @damage.dice
-      end
+    def hit_roll
+      1.d(20) + @to_hit
     end
 
-    def hit_distribution(other)
-      ac = other.ac
-      to_hit.distribution.results_when do |x|
-        if x < ac
-          Distribution.for_number(0)
-        # A normal hit is greater than AC, but lower than a crit
+    def against(other)
+      to_hit.test_then do |res|
+        if res < ac
+          0.to_dice_expression
         elsif x > ac && x < (@crit_threshold + @modifier)
-          @damage.distribution
+          @damage.to(other)
         else
-          @crit_damage.distribution
+          @crit_damage.to(other)
         end
       end
     end
 
-    attr_reader :to_hit, :damage
+    def raw_damage
+      @damage.raw
+    end
   end
 end

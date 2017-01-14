@@ -66,13 +66,6 @@ module FifthedSim
     def average
       @array.map(&:average).inject(:+)
     end
- 
-    ##
-    # Obtain an actual array of dice.
-    # Will likely be rarely used.
-    def dice
-      @array.dup
-    end
 
     ##
     # Calculate the value of these dice

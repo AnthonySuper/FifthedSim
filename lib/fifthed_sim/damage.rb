@@ -34,18 +34,19 @@ module FifthedSim
     ##
     # Obtain a dice roll of how much damage we're doing to a particular enemy
     def to(enemy)
-      puts "Damaging a #{enemy.class}"
       @hash.map do |k, v|
         if enemy.immune_to?(k)
-          puts "immune to #{k}"
           0.to_dice_expression
         elsif enemy.resistant_to?(k)
-          puts "reistant to #{k}"
           (v / 2)
         else
           v
         end
-      end.tap{|x| puts x.inspect}.inject{|sum, k| sum + k}
+      end.inject{|sum, k| sum + k}
+    end
+    
+    def raw
+      @hash.values.inject{|s, k| s + k}
     end
   end
 end
