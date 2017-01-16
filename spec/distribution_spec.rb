@@ -41,7 +41,7 @@ RSpec.describe FifthedSim::Distribution do
 
     it "calculates values up to a certain value" do
       p = 1.0 - unique_prob
-      expect(subject.percent_least(39)).to be_within(0.0001).of(p)
+      expect(subject.percent_lower_equal(39)).to be_within(0.0001).of(p)
     end
   end
 

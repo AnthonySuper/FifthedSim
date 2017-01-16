@@ -5,55 +5,94 @@
 This is a gem to simulate a game that you play with dice on a d20 system.
 It is unfinished, but intends to enable a user to run simulations, or to see the overall probability of things which happen.
 
-## Dice
+## Dice Expression
 
 This gem generalizes the use of dice into *DiceExpressions*, which is an expression representing a calculation done on dice.
-These expressions have *values*, which represent one run of this expression.
-They also come with a *distribution*, which is a probabilistic distribution of the possible values of the expression.
-Perhaps an example is in order.
-Let's say that a character does `3d6 + 2d8 + 5` damage.
-We can express this easily:
+This expression is *lazily evaluated*, which means that it does not turn into an actual numerical value until you call `.to_i` or `.value` on it.
+
+DiceExpressions are more powerful than simply rolling dice and doing math on the results, as we can both reuse them and do statistics on them.
+This allows us to figure out a variety of useful information.
+
+Dice expressions are almost always constructed via the `Fixnum#d` method:
 
 ```ruby
-attack = 3.d(6) + 2.d(8) + 5
+1.d(20)
 ```
 
-Now, let's analyze this value. First, let's see what we rolled:
+From here, mathematical operations work as normal:
 
 ```ruby
-attack.value
-# => 19
+result = (1.d(20) + 3 + 2.d(6)) / (1.d(4) * 2 * 1.d(2))
 ```
 
-Hm. Is that a good roll?
+As mentioned earlier, we can get a numeric value from this expression:
 
 ```ruby
-attack.above_average?
-# => false
+result.value # -> 2
 ```
 
-Guess not.
-How close were we to being average?
+We can also reroll this expression, to get another DiceExpression with a new value:
 
 ```ruby
-attack.difference_from_average
-# => -5.5
+result.reroll.value # -> 6
 ```
 
-That's fairly large.
-Let's see what percentile we were in:
+More interestingly, we can do statistics on this value.
+We can obtain a `Distribution` of possible results for a given dice expression easily:
 
 ```ruby
-attack.percentile
-# => 0.13179
+distribution = result.distribution
 ```
 
-Ouch.
-That's pretty bad.
+Now, let's see how likely our value of 2 was.
+Let's also see what percentile our value is in.
 
+```ruby
+distribution.percent_exactly(2) # -> 0.199305...
+distribution.percentile_of(2) # -> 0.475694...
+```
 
-We can do a wide variety of other things with this roll, including combining it with other rolls, as well as statistical averaging.
-More documentation is yet to come.
+So our roll wasn't terrible, but it wasn't great as well.
+
+### Combinations
+`DiceExpressions` are a powerful construct, because they allow combinations with arbitrary functions, while still being a `DiceExpression`.
+To use an example, let's try to model the damage of a kobold's dagger attack against a player character with 12 AC.
+
+The kobold rolls `1d20 + 4` to hit.
+If he gets a 12 or higher, he does `1d4 + 2` damage to this player.
+Let's model this attack:
+
+```ruby
+attack = (1.d(20) + 4).test_then do |result|
+  if result < 12
+    0.to_dice_expression
+  else
+    1.d(4) + 2
+  end
+end
+```
+
+This is just a `DiceExpression`, so we can get its value, and reroll it:
+
+```ruby
+attack.value # => 0, the poor guy missed
+attack.reroll.value # => 3, he hit... and critfailed damage.
+```
+
+Even more interestingly, however, we can do *statistics* on it.
+Let's see the chance of him doing at least one damage:
+
+```ruby
+attack.distribution.percent_greater(0) # => 0.65, 65% of doing damage
+```
+What about the average damage per attack?
+
+```ruby
+attack.average # => 2.925
+```
+
+As long as the block passed to `test_then` is *pure* (IE, the same input maps to the same output, regardless of anything else that happens in the program), then we can do any kind of calculation we want inside of it.
+This is useful in a variety of situations.
 
 
 ## Installation
