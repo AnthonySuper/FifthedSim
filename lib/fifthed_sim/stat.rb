@@ -2,7 +2,10 @@ module FifthedSim
   class Stat
     class DefinitionProxy
       def initialize(&block)
-        @hash = {}
+        @hash = {
+          mod_bonus: 0,
+          save_mod: 0
+        }
         instance_eval(&block)
       end
 
@@ -18,6 +21,11 @@ module FifthedSim
     def self.define(&block)
       h = DefinitionProxy.new(&block).hash
       self.new(h)
+    end
+
+    def self.from_value(h)
+      raise ArgumentError, "#{h} not fixnum" unless h.is_a?(Fixnum)
+      self.new({value: h, save_mod: 0, mod_bonus: 0})
     end
 
     def initialize(hash)

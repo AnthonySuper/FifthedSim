@@ -22,8 +22,10 @@ module FifthedSim
             @hash[type] = Stat.define(&block)
           elsif x.is_a?(Stat)
             @hash[type] = x
+          elsif x.is_a?(Fixnum)
+            @hash[type] = Stat.from_value(x)
           else
-            raise ArgumentError, "No stat defined"
+            raise ArgumentError, "not a stat"
           end
         end
       end
