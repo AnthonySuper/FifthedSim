@@ -105,7 +105,7 @@ An Actor represents a character or NPC in the game.
 Actors are defined with a nice DSL:
 
 ```ruby
-FifthedSim.define_actor("Bobby") do
+actor = FifthedSim.define_actor("Bobby") do
   base_ac 10
   stats do
     str 10
@@ -127,6 +127,11 @@ FifthedSim.define_actor("Bobby") do
 end
 ```
 
+Construction based on YAML or JSON is still a work in progress.
+Actors are intended to be used to simulate battles.
+This is currently a work in progress, although simulating individual attacks and such *does* currently work.
+
+
 ## Installation
 
 Add this line to your application's Gemfile:
@@ -142,10 +147,6 @@ And then execute:
 Or install it yourself as:
 
     $ gem install fifthed_sim
-
-## Usage
-
-See the rdoc for now.
 
 ## Development
 

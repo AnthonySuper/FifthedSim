@@ -21,6 +21,10 @@ module FifthedSim
   def self.make_roll(val, type)
     RollNode.new(val, type)
   end
+
+  def self.define_actor(name, &block)
+    Actor.define(name, &block)
+  end
 end
 
 class Fixnum
