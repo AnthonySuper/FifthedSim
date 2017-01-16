@@ -138,7 +138,6 @@ module FifthedSim
 
     def percent_lower(n)
       num = n - 1
-      puts num
       return 0.0 if num < @min
       return 1.0 if num > @max
       @min.upto(num).map(&map_proc).inject(:+)
