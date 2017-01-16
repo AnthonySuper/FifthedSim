@@ -1,13 +1,16 @@
 require 'spec_helper'
 
 RSpec.describe FifthedSim::Actor do
-  context "with a standard peasant" do
+  context "with a semi-standard peasant" do
     subject do
       described_class.define "Peasant" do
         base_ac 10
         stats do
           str 10
-          dex 10
+          dex 10 do
+            mod_bonus 1
+            save_mod_bonus 2
+          end
           wis 10
           cha 10
           con 10

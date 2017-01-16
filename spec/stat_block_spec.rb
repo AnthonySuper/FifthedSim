@@ -9,7 +9,7 @@ RSpec.describe FifthedSim::StatBlock do
         end
         dex do
           value 18
-          save_mod 6
+          save_mod_bonus 6
         end
         con do
           value 14

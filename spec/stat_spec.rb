@@ -5,14 +5,14 @@ RSpec.describe FifthedSim::Stat do
     subject do
       described_class.define do
         value 10
-        save_mod 3
+        save_mod_bonus 3
       end
     end
 
     it  do
       is_expected.to have_attributes(value: 10,
                                      mod: 0,
-                                     save_mod: 3)
+                                     save_mod_bonus: 3)
     end
 
     describe ".saving_throw" do
@@ -29,7 +29,7 @@ RSpec.describe FifthedSim::Stat do
       {
         value: 20,
         mod_bonus: 2,
-        save_mod: 10
+        save_mod_bonus: 10
       }
     end
 

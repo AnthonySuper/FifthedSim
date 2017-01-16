@@ -5,7 +5,9 @@
 This is a gem to simulate a game that you play with dice on a d20 system.
 It is unfinished, but intends to enable a user to run simulations, or to see the overall probability of things which happen.
 
-## Dice Expression
+## Usage
+
+## Dice Expressions
 
 This gem generalizes the use of dice into *DiceExpressions*, which is an expression representing a calculation done on dice.
 This expression is *lazily evaluated*, which means that it does not turn into an actual numerical value until you call `.to_i` or `.value` on it.
@@ -54,7 +56,7 @@ distribution.percentile_of(2) # -> 0.475694...
 
 So our roll wasn't terrible, but it wasn't great as well.
 
-### Combinations
+#### Combinations
 `DiceExpressions` are a powerful construct, because they allow combinations with arbitrary functions, while still being a `DiceExpression`.
 To use an example, let's try to model the damage of a kobold's dagger attack against a player character with 12 AC.
 
@@ -94,6 +96,36 @@ attack.average # => 2.925
 As long as the block passed to `test_then` is *pure* (IE, the same input maps to the same output, regardless of anything else that happens in the program), then we can do any kind of calculation we want inside of it.
 This is useful in a variety of situations.
 
+### Simulation
+FifthedSim was originally designed to simulate D&D 5e games.
+Doing this is still under construction, but it's coming along nicely.
+
+Simulation is based on *Actors*.
+An Actor represents a character or NPC in the game.
+Actors are defined with a nice DSL:
+
+```ruby
+FifthedSim.define_actor("Bobby") do
+  base_ac 10
+  stats do
+    str 10
+    dex do
+      value 18
+      save_mod_bonus 5
+    end
+    wis 8
+    cha 16
+    con 14
+    int 12
+  end
+  attack "rapier" do
+    to_hit 5
+    damage do
+      piercing 1.d(6)
+    end
+  end
+end
+```
 
 ## Installation
 
