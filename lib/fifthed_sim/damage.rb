@@ -34,7 +34,7 @@ module FifthedSim
     ##
     # Obtain a dice roll of how much damage we're doing to a particular enemy
     def to(enemy)
-      @hash.map do |k, v|
+      mapped = @hash.map do |k, v|
         if enemy.immune_to?(k)
           0.to_dice_expression
         elsif enemy.resistant_to?(k)
@@ -42,7 +42,12 @@ module FifthedSim
         else
           v
         end
-      end.inject{|sum, k| sum + k}
+      end
+      if mapped.empty?
+        0.to_dice_expression
+      else
+        mapped.inject{|memo, x| memo + x}
+      end
     end
     
     def raw

@@ -56,9 +56,9 @@ module FifthedSim
     def against(other)
       other.saving_throw(@save_type).test_then do |res|
         if res >= @save_dc
-          @save_damage
+          @save_damage.to(other)
         else
-          @damage
+          @damage.to(other)
         end
       end
     end
