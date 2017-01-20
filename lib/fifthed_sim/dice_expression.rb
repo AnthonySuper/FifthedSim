@@ -90,6 +90,20 @@ class Fixnum
   end
 end
 
+class String
+  def to_dice_expression
+    FifthedSim::Compiler.compile(self)
+  end
+end
+
+##
+# C-style conversion, yay
+def DiceExpression(arg)
+  return arg.to_dice_expression if arg.respond_to? :to_dice_expression
+  throw ArgumentError, "Cannot convert #{arg.class} to a DiceExpression"
+end
+    
+
 require_relative './nodes/multi_node'
 require_relative './nodes/addition_node'
 require_relative './nodes/roll_node'
