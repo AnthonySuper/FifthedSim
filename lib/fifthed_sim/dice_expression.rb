@@ -16,27 +16,27 @@ module FifthedSim
     end
 
     def +(other)
-      AdditionNode.new(self, other)
+      AdditionNode.new(self, other.to_dice_expression)
     end
 
     def -(other)
-      SubtractionNode.new(self, other)
+      SubtractionNode.new(self, other.to_dice_expression)
     end
 
     def /(other)
-      DivisionNode.new(self, other)
+      DivisionNode.new(self, other.to_dice_expression)
     end
 
     def *(other)
-      MultiplicationNode.new(self, other)
+      MultiplicationNode.new(self, other.to_dice_expression)
     end
 
     def or_greater(other)
-      GreaterNode.new(self, other)
+      GreaterNode.new(self, other.to_dice_expression)
     end
 
     def or_least(other)
-      LessNode.new(self, other)
+      LessNode.new(self, other.to_dice_expression)
     end
 
     def percentile
@@ -74,6 +74,10 @@ module FifthedSim
 
     def range
       (min..max)
+    end
+
+    def to_dice_expression
+      self
     end
   end
 end

@@ -2,11 +2,14 @@ module FifthedSim
   class Stat
     class DefinitionProxy
       def initialize(&block)
-        @hash = {}
+        @hash = {
+          mod_bonus: 0,
+          save_mod_bonus: 0
+        }
         instance_eval(&block)
       end
 
-      %i(value mod_bonus save_mod).each do |e|
+      %i(value mod_bonus save_mod_bonus).each do |e|
         self.send(:define_method, e) do |x|
           @hash[e] = x
         end
@@ -20,14 +23,19 @@ module FifthedSim
       self.new(h)
     end
 
+    def self.from_value(h)
+      raise ArgumentError, "#{h} not fixnum" unless h.is_a?(Fixnum)
+      self.new({value: h, save_mod: 0, mod_bonus: 0})
+    end
+
     def initialize(hash)
       @value = hash[:value]
       @mod_bonus = (hash[:mod_bonus] || 0)
-      @save_mod = (hash[:save_mod] || mod)
+      @save_mod_bonus = (hash[:save_mod_bonus] || 0)
     end
 
     attr_reader :value,
-      :save_mod,
+      :save_mod_bonus,
       :mod_bonus
 
     def mod
@@ -35,7 +43,7 @@ module FifthedSim
     end
 
     def saving_throw
-      1.d(20) + save_mod
+      1.d(20) + mod + save_mod_bonus
     end
   end
 end

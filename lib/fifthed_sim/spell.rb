@@ -14,7 +14,7 @@ module FifthedSim
 
       %i(damage save_damage).each do |m|
         self.send(:define_method, m) do |damage = nil, &block|
-          if block_given?
+          if block
             @hash[m] = Damage.define(&block)
           elsif damage.is_a?(Damage)
             @hash[m] = damage
@@ -31,6 +31,15 @@ module FifthedSim
       def save_type(n)
         @hash[:save_type] = n
       end
+
+      def attrs
+        @hash
+      end
+    end
+
+    def self.define(name, &block)
+      h = DefinitionProxy.new(name, &block).attrs
+      self.new(h)
     end
 
     def initialize(hash)
@@ -47,9 +56,9 @@ module FifthedSim
     def against(other)
       other.saving_throw(@save_type).test_then do |res|
         if res >= @save_dc
-          @save_damage
+          @save_damage.to(other)
         else
-          @damage
+          @damage.to(other)
         end
       end
     end

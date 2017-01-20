@@ -24,7 +24,7 @@ module FifthedSim
     end
 
     def reroll
-      self.new(@value)
+      self.class.new(@value)
     end
   end
 end

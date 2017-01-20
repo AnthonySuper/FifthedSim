@@ -6,7 +6,7 @@ module FifthedSim
           name: name,
           attacks: {},
           spells: {},
-          ac: 0
+          base_ac: 10
         }
         instance_eval(&block)
       end
@@ -33,8 +33,18 @@ module FifthedSim
         end
       end
 
-      def ac(num)
-        @attrs[:ac] = ac
+      def stats(n = nil, &block)
+        if n && n.is_a?(StatBlock)
+          @attrs[:stats] = n
+        elsif block
+          @attrs[:stats] = StatBlock.define(&block)
+        else
+          raise ArgumentError, "Must be a statblock"
+        end
+      end
+
+      def base_ac(num)
+        @attrs[:base_ac] = num
       end
     end
 
@@ -43,12 +53,12 @@ module FifthedSim
       return self.new(d.attrs)
     end
 
-    ASSIGNABLE_ATTRS = [:ac, 
+    ASSIGNABLE_ATTRS = [:base_ac, 
                         :name, 
                         :attacks, 
                         :spells]
     def initialize(attrs)
-      attrs.to_a.keep_if{ |(k, v)| ASSIGNABLE_ATTRS.contains?(v) }
+      attrs.to_a.keep_if{ |(k, v)| ASSIGNABLE_ATTRS.include?(v) }
         .each { |(k, v)| self.instance_variable_set("@#{k}", v) }
     end
 
@@ -56,7 +66,13 @@ module FifthedSim
       @attacks.keys.sample
     end
 
-    attr_reader :ac,
+    ##
+    # TODO: Implement armor
+    def ac
+      base_ac
+    end
+
+    attr_reader :base_ac,
       :name,
       :attacks,
       :spells

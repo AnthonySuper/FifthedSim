@@ -136,17 +136,32 @@ module FifthedSim
       Math.sqrt(variance)
     end
 
-    def percent_least(num)
-      return 0 if num < @min
-      return 1 if num >= @max
+    def percent_lower(n)
+      num = n - 1
+      return 0.0 if num < @min
+      return 1.0 if num > @max
       @min.upto(num).map(&map_proc).inject(:+)
     end
 
-    def percent_greater(num)
-      return 0 if num > @max
-      return 1 if num >= @min
+    def percent_greater(n)
+      num = n + 1
+      return 0.0 if num > @max
+      return 1.0 if num < @min
       num.upto(@max).map(&map_proc).inject(:+)
     end
+
+    def percent_lower_equal(num)
+      percent_lower(num + 1)
+    end
+
+    def percent_greater_equal(num)
+      percent_greater(num - 1)
+    end
+
+    alias_method :percentile_of,
+      :percent_lower_equal
+
+
 
     def convolve(other)
       h = {}
@@ -211,7 +226,7 @@ module FifthedSim
         (s..other.max).each do |e|
           h[e] += (other.percent_exactly(e) * percent_exactly(s))
         end
-        h[s] += (other.percent_least(s - 1) * percent_exactly(s))
+        h[s] += (other.percent_lower(s) * percent_exactly(s))
       end
       self.class.new(h)
     end
@@ -250,7 +265,7 @@ module FifthedSim
     private
     def map_proc
       return Proc.new do |arg|
-        res = @map[arg]
+        @map[arg]
       end
     end
   end

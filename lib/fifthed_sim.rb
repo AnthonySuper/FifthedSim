@@ -6,7 +6,7 @@ require "fifthed_sim/actor"
 require "fifthed_sim/stat_block"
 require "fifthed_sim/damage_types"
 require "fifthed_sim/damage"
-require "fifthed_sim/expression_parser"
+require "fifthed_sim/spell"
 require "securerandom"
 
 module FifthedSim
@@ -20,6 +20,10 @@ module FifthedSim
 
   def self.make_roll(val, type)
     RollNode.new(val, type)
+  end
+
+  def self.define_actor(name, &block)
+    Actor.define(name, &block)
   end
 end
 
