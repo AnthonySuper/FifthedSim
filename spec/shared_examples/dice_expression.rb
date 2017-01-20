@@ -72,4 +72,14 @@ RSpec.shared_examples "dice expression" do
       end
     end
   end
+
+  describe ".value_equation" do
+    it "works when not in terminal" do
+      expect { node.value_equation }.to_not raise_error
+    end
+
+    it "works in terminal" do
+      expect { node.value_equation(terminal: true) }.to_not raise_error
+    end
+  end
 end

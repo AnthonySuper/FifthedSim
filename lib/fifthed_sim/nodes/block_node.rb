@@ -9,7 +9,8 @@ module FifthedSim
     def initialize(arg, &block)
       @arg = arg
       @block = block
-      @current_value = block.call(arg.value).value
+      @current_expression = block.call(arg.value)
+      @current_value = @current_expression.value
     end
 
     def value
@@ -22,6 +23,12 @@ module FifthedSim
 
     def distribution
       @arg.distribution.results_when(&distribution_block)
+    end
+
+    def value_equation(terminal: false)
+      arg = @arg.value_equation(terminal: terminal)
+      ce = @current_expression.value_equation(terminal: terminal)
+      "blockNode(#{arg} => #{ce})"
     end
 
     protected

@@ -19,5 +19,7 @@ module FifthedSim
     def reroll
       self.class.new(@lhs.reroll, @rhs.reroll)
     end
+
+    define_binary_op_equations "*"
   end
 end

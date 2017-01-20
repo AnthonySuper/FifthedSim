@@ -1,3 +1,5 @@
+require 'rainbow'
+
 module FifthedSim
   ##
   # This is an abstract dice expression class
@@ -77,7 +79,23 @@ module FifthedSim
     end
 
     def to_dice_expression
-      self
+      self.dup
+    end
+
+    protected
+
+    def self.define_binary_op_equations(op)
+      self.send(:define_method, :value_equation) do |terminal: false|
+        lhs = instance_variable_get(:@lhs).value_equation(terminal: terminal)
+        rhs = instance_variable_get(:@rhs).value_equation(terminal: terminal)
+        "(#{lhs} #{op} #{rhs}"
+      end
+
+      self.send(:define_method, :expression_equation) do
+        lhs = instance_variable_get(:@lhs)
+        rhs = instance_variable_get(:@rhs)
+        "(#{lhs.expression_equation} #{op} #{rhs.expression_equation})"
+      end
     end
   end
 end

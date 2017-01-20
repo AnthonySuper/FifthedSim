@@ -49,6 +49,19 @@ module FifthedSim
     end
 
 
+    def value_equation(terminal: false)
+      arglist = @components.map do |c|
+        c.value_equation(terminal: terminal)
+      end.inject{|m, x| m + "+ #{x}"}
+      "(#{arglist})"
+    end
+
+    def expression_equation
+      "(" + @components.map do |c|
+        c.expression_equation
+      end.inject{|m, x| m + "+ #{x}"} + ")"
+    end
+
     private
     ALLOWED_TYPES = [DiceExpression,
                      Fixnum]

@@ -27,5 +27,15 @@ module FifthedSim
     def max
       [@lhs.max, @rhs.max].max
     end
+
+    def value_equation(terminal: false)
+      lhs = @lhs.value_equation(terminal: terminal)
+      rhs = @rhs.value_equation(terminal: terminal)
+      "max(#{lhs}, #{rhs}"
+    end
+
+    def expression_equation
+      "max(#{lhs.expression_equation}, #{rhs.expression_equation})"
+    end
   end
 end

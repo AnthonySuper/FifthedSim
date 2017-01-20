@@ -44,6 +44,14 @@ module FifthedSim
       def reroll
         self
       end
+
+      def value_equation(terminal: false)
+        self.to_s
+      end
+
+      def expression_equation
+        self.to_s
+      end
     end
   end
 end

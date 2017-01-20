@@ -18,5 +18,7 @@ module FifthedSim
     def distribution
       @lhs.distribution.convolve_subtract(@rhs.distribution)
     end
+
+    define_binary_op_equations "-"
   end
 end

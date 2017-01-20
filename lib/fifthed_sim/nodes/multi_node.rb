@@ -108,6 +108,18 @@ module FifthedSim
       Distribution.new(Hash[mapped])
     end
 
+    def value_equation(terminal: false)
+      "(" + @array.map do |a|
+        a.value_equation(terminal: terminal)
+      end.join(", ") + ")"
+    end
+
+    def expression_equation
+      "(" + @array.map do |a|
+        a.expression_equation
+      end.join(", ") + ")"
+    end
+
     private
 
     def occurences(num)

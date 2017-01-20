@@ -26,5 +26,13 @@ module FifthedSim
     def reroll
       self.class.new(@value)
     end
+
+    def value_equation(terminal: false)
+      @value.to_s
+    end
+
+    def expression_equation
+      @value.to_s
+    end
   end
 end

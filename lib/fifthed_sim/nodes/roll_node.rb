@@ -11,7 +11,7 @@ module FifthedSim
     # Create a diceresult by rolling a certain type.
     def self.roll(type)
       raise ArgumentError, "Must be an Integer" unless type.is_a? Fixnum
-      self.new(SecureRandom.random_number(type - 1) + 1, type)
+      self.new(SecureRandom.random_number(type) + 1, type)
     end
 
     ##
@@ -68,6 +68,21 @@ module FifthedSim
 
     def distribution
       Distribution.for((1..@type))
+    end
+
+    def value_equation(terminal: false)
+      return value.to_s unless terminal
+      if critfail?
+        Rainbow(value.to_s).color(:red).bright.to_s
+      elsif crit?
+        Rainbow(value.to_s).color(:yellow).bright.to_s
+      else
+        value.to_s
+      end
+    end
+
+    def expression_equation
+      "d#{@type}"
     end
   end
 end
