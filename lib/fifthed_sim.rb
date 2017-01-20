@@ -7,6 +7,7 @@ require "fifthed_sim/stat_block"
 require "fifthed_sim/damage_types"
 require "fifthed_sim/damage"
 require "fifthed_sim/spell"
+require "fifthed_sim/compiler"
 require "securerandom"
 
 module FifthedSim
