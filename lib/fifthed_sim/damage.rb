@@ -14,10 +14,7 @@ module FifthedSim
 
       DAMAGE_TYPES.each do |type|
         self.send(:define_method, type) do |arg|
-          unless arg.is_a?(DiceExpression) || arg.is_a?(Fixnum)
-            raise ArgumentError, "Must be a dice throw"
-          end
-          @attrs[type] = arg
+          @attrs[type] = DiceExpression(arg)
         end
       end
     end
