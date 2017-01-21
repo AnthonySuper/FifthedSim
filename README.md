@@ -7,7 +7,21 @@ It is unfinished, but intends to enable a user to run simulations, or to see the
 
 ## Usage
 
-## Dice Expressions
+### Executable
+
+If you just want to roll dice, simply install the gem and type "diceroll".
+This will bring up a Dice REPL, which has some nice functionality.
+Just type a dice expression, and you will get a result:
+
+```
+> d20 + 3d6
+  => 18 + (3 2 6)
+  =  29
+```
+You can also get some info about a roll by typing `info`.
+Type `help` to see all the commands.
+
+### Dice Expressions
 
 This gem generalizes the use of dice into *DiceExpressions*, which is an expression representing a calculation done on dice.
 This expression is *lazily evaluated*, which means that it does not turn into an actual numerical value until you call `.to_i` or `.value` on it.
