@@ -8,7 +8,7 @@ module FifthedSim
     end
 
     def value
-      @lhs - @rhs
+      @lhs.value - @rhs.value
     end
 
     def reroll
