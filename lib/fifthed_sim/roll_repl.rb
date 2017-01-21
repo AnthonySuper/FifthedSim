@@ -18,10 +18,32 @@ module FifthedSim
       end
     end
 
+    def info(cmd)
+      s = cmd.gsub(/info/, "").chomp
+      if s.length > 0
+        run_command(s)
+      end
+      return error_msg("Have nothing to get info of") unless @last_roll
+      lb = ->(x){Rainbow(x).color(:yellow).bright.to_s + ": "}
+      puts (%i(max min percentile).map do |p|
+        lb[p] + @last_roll.public_send(p).to_s
+      end.inject{|m, x| m + ", " + x})
+    end
+
+    def reroll
+      return error_msg("Nothing to reroll") unless @last_roll
+      display_roll(@last_roll.reroll)
+    end
+
     def run_cmd(cmd)
       case cmd
       when /(quit|exit|stop)/
         self.exit
+      when "rr", "reroll"
+        self.reroll
+      when /info/
+
+        self.info(cmd)
       when "help"
         self.help
       when "inspect"
@@ -35,18 +57,22 @@ module FifthedSim
 
     def roll(cmd)
       r = DiceExpression(cmd)
-      @last_expression = r
-      if @inspect
-        puts "  =  " + r.value_equation(terminal: true)
-        puts "  => " + Rainbow(r.value.to_s).underline.bright.to_s
-      else
-        puts r.value.to_s
-      end
+      @last_roll = r
+      display_roll(r)
     rescue FifthedSim::Compiler::CompileError => e
       if e.char
         display_compile_error(e, cmd)
       else
         error_msg("Could not parse expression!")
+      end
+    end
+
+    def display_roll(r)
+      if @inspect
+        puts "  =  " + r.value_equation(terminal: true)
+        puts "  => " + Rainbow(r.value.to_s).underline.bright.to_s
+      else
+        puts r.value.to_s
       end
     end
 
@@ -83,6 +109,8 @@ module FifthedSim
       #{cmd[:quit]} exit the roller
       #{cmd[:errors]} toggle in-depth compile errors for dice expressions
       #{cmd["arrow keys"]} navigate like GNU readline
+      #{cmd[:info]} get info about the previous roll, or a roll on this line.
+      #{cmd["rr, reroll"]} reroll the previous dice
       }
     end
   end

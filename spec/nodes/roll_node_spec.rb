@@ -48,5 +48,9 @@ RSpec.describe FifthedSim::RollNode do
     it "converts to a 20.0" do
       expect(subject.to_f).to eq(20.0)
     end
+
+    it "is in the 100th percentile" do
+      expect(subject.percentile).to be_within(0.0001).of(1.0)
+    end
   end
 end

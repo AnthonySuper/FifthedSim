@@ -42,7 +42,7 @@ module FifthedSim
     end
 
     def percentile
-      distribution.percent_least(value)
+      distribution.percent_lower_equal(value)
     end
 
     def max
