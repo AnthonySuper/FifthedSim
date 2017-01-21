@@ -25,9 +25,10 @@ module FifthedSim
       end
       return error_msg("Have nothing to get info of") unless @last_roll
       lb = ->(x){Rainbow(x).color(:yellow).bright.to_s + ": "}
-      puts (%i(max min percentile).map do |p|
+      a = %i(max min percentile).map do |p|
         lb[p] + @last_roll.public_send(p).to_s
-      end.inject{|m, x| m + ", " + x})
+      end.inject{|m, x| m + ", " + x}
+      puts a
     end
 
     def reroll
