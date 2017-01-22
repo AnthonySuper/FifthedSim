@@ -1,8 +1,11 @@
 module FifthedSim
   class RollRepl
-    def initialize(inspect = true, errors = false)
+    def initialize(inspect: true,
+                   errors: false,
+                   auto_info: false)
       @inspect = inspect
       @errors = errors
+      @auto_info = auto_info
     end
 
     def run(kill_on_interrupt = false)
@@ -18,11 +21,15 @@ module FifthedSim
       end
     end
 
-    def info(cmd)
+    def info_command(cmd)
       s = cmd.gsub(/info/, "").chomp
       if s.length > 0
-        run_command(s)
+        roll(s)
       end
+      print_last_info
+    end
+
+    def print_last_info
       return error_msg("Have nothing to get info of") unless @last_roll
       lb = ->(x){Rainbow(x).color(:yellow).bright.to_s + ": "}
       a = %i(max min percentile).map do |p|
@@ -33,7 +40,8 @@ module FifthedSim
 
     def reroll
       return error_msg("Nothing to reroll") unless @last_roll
-      display_roll(@last_roll.reroll)
+      @last_roll = @last_roll.reroll
+      display_roll(@last_roll)
     end
 
     def run_cmd(cmd)
@@ -42,15 +50,16 @@ module FifthedSim
         self.exit
       when "rr", "reroll"
         self.reroll
-      when /info/
-
-        self.info(cmd)
+      when "info"
+        info_command(cmd)
       when "help"
         self.help
       when "inspect"
         toggle_inspect
       when "errors"
         toggle_errors
+      when "autoinfo"
+        toggle_auto_info
       else
         self.roll(cmd)
       end
@@ -69,12 +78,9 @@ module FifthedSim
     end
 
     def display_roll(r)
-      if @inspect
-        puts "  =  " + r.value_equation(terminal: true)
-        puts "  => " + Rainbow(r.value.to_s).underline.bright.to_s
-      else
-        puts r.value.to_s
-      end
+      puts "  =  " + r.value_equation(terminal: true) if @inspect  
+      puts "  => " + Rainbow(r.value.to_s).underline.bright.to_s
+      print_last_info if @auto_info
     end
 
     def error_msg(msg)
@@ -89,7 +95,7 @@ module FifthedSim
       end
     end
 
-    [:inspect, :errors].each do |m|
+    [:inspect, :errors, :auto_info].each do |m|
       send(:define_method, "toggle_#{m}") do
         t = instance_variable_get("@#{m}")
         puts "#{m}: #{t.inspect} => #{(!t).inspect}"
