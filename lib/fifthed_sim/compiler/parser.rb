@@ -15,7 +15,8 @@ class FifthedSim::Compiler
         .as(:dice)
     end
     rule(:base_term) { (dice | number) >> space? } 
-    rule(:primary) { lparen >> addition >> rparen | base_term }
+    rule(:parenthetical) { lparen >> addition >> rparen }
+    rule(:primary) { parenthetical | base_term }
 
     rule(:add_op) { match('\+|-').as(:op) >> space? }
     rule(:addition) do

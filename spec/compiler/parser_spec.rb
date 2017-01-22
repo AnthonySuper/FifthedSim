@@ -82,11 +82,28 @@ RSpec.describe FifthedSim::Compiler::Parser do
     subject { parser.funcall }
     it { is_expected.to parse("wow(1, 1)") }
     it { is_expected.to parse("foo(1d20, 1d20)") }
+    it { is_expected.to_not parse("1(20)") }
+    it { is_expected.to_not parse("foo(1") }
   end
+
+  describe ".parenthetical" do
+    subject { parser.parenthetical }
+    it { is_expected.to parse("(1d20)") }
+    it { is_expected.to parse("(1d20 + 3)") }
+    it { is_expected.to_not parse("(1d20") }
+    it { is_expected.to_not parse("1d20") }
+  end
+
   ["1d20 * 3 - 3d4",
    "1d20 * fun(10)",
    "1d20 + 3 - 4/1d4",
-    "d4 + d4 + d4 + d4"].each do |expr|
+   "d4 + d4 + d4 + d4"].each do |expr|
      it { is_expected.to parse(expr) }
    end
+
+   ["1d20 1d20",
+    "1d20 - (1",
+    "1 - 2)"].each do |expr|
+      it { is_expected.to_not parse(expr) }
+    end
 end
