@@ -9,6 +9,16 @@ module FifthedSim
       value
     end
 
+    ## 
+    # Allow explicit coerceon
+    def to_int
+      value
+    end
+
+    def coerce(other)
+      [NumberNode.new(other), self]
+    end
+
     def to_f
       value.to_f
     end
