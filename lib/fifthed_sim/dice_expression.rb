@@ -92,6 +92,11 @@ module FifthedSim
       self.dup
     end
 
+
+    def stats
+      distribution
+    end
+
     protected
 
     def self.define_binary_op_equations(op)
