@@ -1,8 +1,6 @@
 require_relative './damage_types'
-require_relative './calculated_fixnum'
 module FifthedSim
   class Damage
-    using CalculatedFixnum
 
     class DefinitionProxy
       def initialize(&block)

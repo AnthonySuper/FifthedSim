@@ -72,7 +72,7 @@ module FifthedSim
 
     {"above_" => :>, "below_" => :<, "" => :==}.each do |k,v|
       define_method "#{k}average?" do
-        value.public_send(v, average)
+        value.public_send(v, average.round(4))
       end
     end
 
@@ -116,7 +116,7 @@ module FifthedSim
 end
 
 ##
-# Allow .to_dice_expression on Fixnum
+# Allow .to_dice_expression and other needed values on Fixnums
 class Fixnum
   def to_dice_expression
     FifthedSim::NumberNode.new(self)

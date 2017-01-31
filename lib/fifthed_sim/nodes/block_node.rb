@@ -1,15 +1,12 @@
 require_relative '../dice_expression'
-require_relative '../calculated_fixnum'
 require_relative '../distribution'
 
 module FifthedSim
   class BlockNode < DiceExpression
-    using CalculatedFixnum
-
     def initialize(arg, &block)
       @arg = arg
       @block = block
-      @current_expression = block.call(arg.value)
+      @current_expression = block.call(arg.value).to_dice_expression
       @current_value = @current_expression.value
     end
 
@@ -35,9 +32,8 @@ module FifthedSim
 
     def distribution_block
       h = Hash[@arg.range.map do |k|
-        [k, @block.call(k).distribution]
+        [k, @block.call(k).to_dice_expression.distribution]
       end]
-      require 'pry'
       proc do |x|
         h.fetch(x)
       end

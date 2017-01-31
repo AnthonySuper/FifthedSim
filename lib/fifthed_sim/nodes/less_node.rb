@@ -1,9 +1,7 @@
 require_relative '../dice_expression'
-require_relative '../calculated_fixnum'
 
 module FifthedSim
   class LessNode < DiceExpression
-    using CalculatedFixnum
 
     def initialize(lhs, rhs)
       @lhs, @rhs = lhs, rhs

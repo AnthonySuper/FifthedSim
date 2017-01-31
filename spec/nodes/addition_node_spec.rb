@@ -2,11 +2,6 @@ require 'spec_helper'
 require "shared_examples/dice_expression"
 
 RSpec.describe FifthedSim::AdditionNode do
-  describe "initialization" do
-    it "fails with non-member types" do
-      expect{described_class.new("")}.to raise_error(TypeError)
-    end
-  end
 
   context "with an example node" do
     let(:node) { 1.d(20) + 2 }
@@ -35,10 +30,8 @@ RSpec.describe FifthedSim::AdditionNode do
 
   context "with a crit d20, a critfail d20, and a 5 modifier" do
     subject do
-      described_class.new(d20_1_r, d20_20_r, 5)
+      described_class.new(d20_1_r, d20_20_r) + 5
     end
-    it { is_expected.to have_critfail }
-    it { is_expected.to have_crit }
     it { is_expected.to_not be_above_average }
     it { is_expected.to be_average }
     it { is_expected.to_not be_below_average }
@@ -48,13 +41,13 @@ RSpec.describe FifthedSim::AdditionNode do
     end
 
     it "should have an average value of 26" do
-      expect(subject.average).to eq(26)
+      expect(subject.average).to be_within(0.0002).of(26)
     end
   end
 
   context "with a crit d20, a critfail d6, and a 2 modifier" do
     subject do
-      described_class.new(d20_20_r, d6_1_r, 2)
+      described_class.new(d20_20_r, d6_1_r) + 2
     end
     it "should have a value of 23" do
       expect(subject.value).to eq(23)

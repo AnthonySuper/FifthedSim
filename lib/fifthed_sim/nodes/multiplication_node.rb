@@ -2,7 +2,6 @@ require_relative '../dice_expression'
 
 module FifthedSim
   class MultiplicationNode < DiceExpression
-    using CalculatedFixnum
     def initialize(lhs, rhs)
       @lhs = lhs
       @rhs = rhs

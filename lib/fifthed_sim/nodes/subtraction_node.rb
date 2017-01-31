@@ -1,7 +1,6 @@
 require_relative '../dice_expression'
 module FifthedSim
   class SubtractionNode < DiceExpression
-    using CalculatedFixnum
     def initialize(lhs, rhs)
       @lhs = lhs
       @rhs = rhs

@@ -101,11 +101,12 @@ module FifthedSim
     # Obtain a probability distribution for when we roll this many dice.
     # This is an instnace of the Distribution class.
     def distribution
+      return @distribution if defined?(@distribution)
       total_possible = (dice_type ** roll_count)
       mapped = min_value.upto(max_value).map do |k|
         [k, (occurences(k) / total_possible.to_f)]
       end
-      Distribution.new(Hash[mapped])
+      @distribution = Distribution.new(Hash[mapped])
     end
 
     def value_equation(terminal: false)
