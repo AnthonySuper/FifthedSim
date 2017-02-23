@@ -140,14 +140,14 @@ module FifthedSim
       num = n - 1
       return 0.0 if num < @min
       return 1.0 if num > @max
-      @min.upto(num).map(&map_proc).inject(:+)
+      @min.upto(num).map(&self).inject(:+)
     end
 
     def percent_greater(n)
       num = n + 1
       return 0.0 if num > @max
       return 1.0 if num < @min
-      num.upto(@max).map(&map_proc).inject(:+)
+      num.upto(@max).map(&self).inject(:+)
     end
 
     def percent_lower_equal(num)
@@ -262,10 +262,9 @@ module FifthedSim
       end.join("\n")
     end
 
-    private
-    def map_proc
-      return Proc.new do |arg|
-        @map[arg]
+    def to_proc
+      Proc.new do |arg|
+        @map[arg] || 0
       end
     end
   end
