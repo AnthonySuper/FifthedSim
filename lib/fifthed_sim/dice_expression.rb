@@ -133,7 +133,7 @@ end
 # C-style conversion, yay
 def DiceExpression(arg)
   return arg.to_dice_expression if arg.respond_to? :to_dice_expression
-  throw ArgumentError, "Cannot convert #{arg.class} to DiceExpression"
+  raise ArgumentError, "Cannot convert #{arg.class} to DiceExpression"
 end
     
 

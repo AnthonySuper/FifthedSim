@@ -1,6 +1,10 @@
 require_relative './damage_types'
+require_relative './serialized'
+require_relative './dice_expression'
+
 module FifthedSim
   class Damage
+    prepend Serialized
 
     class DefinitionProxy
       def initialize(&block)
@@ -20,6 +24,12 @@ module FifthedSim
     def self.define(&block)
       h = DefinitionProxy.new(&block).attrs
       self.new(h)
+    end
+
+    DAMAGE_TYPES.each do |type|
+      attribute type, DiceExpression,
+        allow_nil: false,
+        required: false
     end
 
     def initialize(hash)
