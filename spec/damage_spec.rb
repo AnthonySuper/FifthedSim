@@ -10,12 +10,14 @@ RSpec.describe FifthedSim::Damage do
       (arg == :cold).tap{|x| "FIM immune to #{arg}? #{x}"}
     end
   end
+
   let(:fireice) { FireIceMonster.new }
 
   class Normal
     def resistant_to?(_); false; end;
     def immune_to?(_); false; end;
   end
+
   let(:normal) { Normal.new }
 
   context "doing slashing damage" do
@@ -63,6 +65,14 @@ RSpec.describe FifthedSim::Damage do
       it "does full damage" do
         expect(subject.to(foe).average).to eq(2.d(4).average)
       end
+    end
+  end
+
+
+  describe "construction" do
+    it "works with a serialized hash" do
+      d = described_class.new({fire: "1d10"})
+      expect(d.to(normal).average).to eq(1.d(10).average)
     end
   end
 end

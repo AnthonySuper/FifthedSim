@@ -28,7 +28,15 @@ module FifthedSim
       self.new({value: h, save_mod: 0, mod_bonus: 0})
     end
 
-    def initialize(hash)
+    def initialize(at)
+      hash = case at
+             when Hash
+               at
+             when Integer
+               {value: at}
+             else
+               raise ArgumentError, "Can't construct"
+             end
       @value = hash[:value]
       @mod_bonus = (hash[:mod_bonus] || 0)
       @save_mod_bonus = (hash[:save_mod_bonus] || 0)

@@ -8,6 +8,7 @@ module FifthedSim
                 :con,
                 :int]
   class StatBlock
+    prepend Serialized
 
 
     class DefinitionProxy
@@ -33,19 +34,18 @@ module FifthedSim
       attr_accessor :hash
     end
 
+
     def self.define(&block)
       h = DefinitionProxy.new(&block)
       self.new(h.hash)
     end
 
+    STAT_TYPES.each do |s|
+      attribute s, Stat
+    end
+
     def initialize(hash)
-      @hash = Hash[hash.map do |k, v|
-        if v.is_a?(Stat)
-          [k, v]
-        else
-          [k, Stat.new(v)]
-        end
-      end]
+      @hash = hash
     end
 
     STAT_TYPES.each do |st|

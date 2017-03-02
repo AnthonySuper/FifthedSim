@@ -2,12 +2,15 @@ require 'spec_helper'
 
 RSpec.describe FifthedSim::Stat do
   context "with a block definition" do
-    subject do
+
+    let(:stat) do
       described_class.define do
         value 10
         save_mod_bonus 3
       end
     end
+
+    subject { stat }
 
     it  do
       is_expected.to have_attributes(value: 10,

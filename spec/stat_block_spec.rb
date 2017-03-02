@@ -39,4 +39,22 @@ RSpec.describe FifthedSim::StatBlock do
       it { is_expected.to have_attributes(value: 14, mod_bonus: 5) }
     end
   end
+
+  context "with a dictionary block" do
+    let(:dict) do
+      {
+        :int => 10,
+        :dex => 10,
+        :con => 10,
+        :str => 10,
+        :cha => 10,
+        :wis => 10
+      }
+    end
+    let(:statblock) { described_class.new(dict) }
+    subject { statblock }
+    it "is valid" do
+      expect{ subject }.to_not raise_error
+    end
+  end
 end

@@ -9,6 +9,7 @@ require "fifthed_sim/damage"
 require "fifthed_sim/spell"
 require "fifthed_sim/compiler"
 require "fifthed_sim/roll_repl"
+require "fifthed_sim/serialized"
 require "securerandom"
 
 module FifthedSim
