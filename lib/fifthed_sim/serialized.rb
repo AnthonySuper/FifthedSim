@@ -49,6 +49,20 @@ module FifthedSim
       def serialized_default k
         @attr_map[k][:default]
       end
+
+      def define(&block)
+        h = self.definition_proxy.new(&block)
+        self.new(h.get_attrs)
+      end
+
+      def definition_proxy
+        @definition_proxy ||= make_definition_proxy
+        @definition_proxy
+      end
+
+      def make_definition_proxy
+        Serialized::DefinitionProxy.create(@attr_map)
+      end
     end
 
     def initialize(hash)
@@ -80,3 +94,5 @@ module FifthedSim
     end
   end
 end
+
+require_relative './serialized/definition_proxy'

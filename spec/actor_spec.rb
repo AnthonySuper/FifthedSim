@@ -6,15 +6,26 @@ RSpec.describe FifthedSim::Actor do
       described_class.define "Peasant" do
         base_ac 10
         stats do
-          str 10
-          dex 10 do
+          str do
+            value 10
+          end
+          dex do
+            value 10
             mod_bonus 1
             save_mod_bonus 2
           end
-          wis 10
-          cha 10
-          con 10
-          int 10
+          wis do
+            value 10
+          end
+          cha do 
+            value 10
+          end
+          con do
+            value 10
+          end
+          int do
+            value 10
+          end
         end
         attack "club" do
           to_hit 2

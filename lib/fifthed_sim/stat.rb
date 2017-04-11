@@ -1,27 +1,19 @@
 module FifthedSim
   class Stat
-    class DefinitionProxy
-      def initialize(&block)
-        @hash = {
-          mod_bonus: 0,
-          save_mod_bonus: 0
-        }
-        instance_eval(&block)
-      end
+    prepend Serialized
 
-      %i(value mod_bonus save_mod_bonus).each do |e|
-        self.send(:define_method, e) do |x|
-          @hash[e] = x
-        end
+    def define(num = nil, &block)
+      if block
+        super(&block)
+      else
+        self.from_value(num)
       end
-
-      attr_reader :hash
     end
 
-    def self.define(&block)
-      h = DefinitionProxy.new(&block).hash
-      self.new(h)
-    end
+    attribute :value, Integer
+    attribute :mod_bonus, Integer, default: 0
+    attribute :save_mod_bonus, Integer, default: 0
+    
 
     def self.from_value(h)
       raise ArgumentError, "#{h} not fixnum" unless h.is_a?(Fixnum)
