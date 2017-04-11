@@ -8,11 +8,13 @@ module FifthedSim
     end
 
     module ClassMethods
-      def attribute(name, klass, allow_nil: false, required: true)
+      def attribute(name, klass, 
+                    required: true,
+                    default: nil)
         @attr_map ||= {}
         @attr_map[name] = {klass: klass, 
-                           allow_nil: allow_nil,
-                           required: required}
+                           required: required,
+                           default: default}
       end
 
       def serialized_attributes
@@ -24,8 +26,7 @@ module FifthedSim
         allow_nil = @attr_map[name][:allow_nil]
         name = klass.name.split("::").last
         if obj.nil?
-          raise ArgumentError, "Cannot be nil" unless allow_nil
-          obj
+          return nil
         elsif klass === obj
           obj
         elsif respond_to?(name.to_sym, true)
@@ -40,22 +41,38 @@ module FifthedSim
       def attribute_optional? attr
         ! @attr_map[attr][:required]
       end
+
+      def has_serialized_default? k
+        ! @attr_map[k][:default].nil?
+      end
+
+      def serialized_default k
+        @attr_map[k][:default]
+      end
     end
 
     def initialize(hash)
       if hash.is_a? Hash
         h = self.class.serialized_attributes.map do |k, v|
-          unless hash.has_key?(k)
-            if self.class.attribute_optional?(k)
-              next
-            else
-              raise ArgumentError, "Hash needs key #{k}"
-            end
-          end
-          sym = k.to_sym
-          conv = self.class.serialized_convert(sym, hash[sym])
-          [sym, conv]
+          value = if hash.has_key?(k)
+                    hash[k]
+                  elsif self.class.has_serialized_default? k
+                    self.class.serialized_default(k)
+                  elsif self.class.attribute_optional? k
+                    nil
+                  else
+                    raise ArgumentError, "Parameter #{k} missing"
+                  end
+          conv = self.class.serialized_convert(k, value)
+          [k, conv]
         end.compact
+        h.map! do |k, v|
+          if v.nil? && self.class.attribute_optional?(k) then
+            nil
+          else
+            [k, v]
+          end
+        end.compact!
         super(Hash[h])
       else
         super(hash)

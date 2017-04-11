@@ -7,7 +7,7 @@ RSpec.describe FifthedSim::Damage do
     end
 
     def immune_to?(arg)
-      (arg == :cold).tap{|x| "FIM immune to #{arg}? #{x}"}
+      (arg == :cold)
     end
   end
 

@@ -27,4 +27,23 @@ RSpec.describe FifthedSim::Attack do
       expect(subject.raw_damage.average).to eq((2.d(6).average))
     end
   end
+
+  context "with a hash definition" do
+    let(:hash) {
+      {
+        name: "",
+        damage: {
+          slashing: "1d6"
+        },
+        to_hit: 0,
+        crit_damage: {
+          slashing: "2d6"
+        }
+      }
+    }
+    subject { described_class.new(hash) }
+    it "works" do
+      expect{ subject }.to_not raise_error
+    end
+  end
 end

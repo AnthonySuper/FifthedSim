@@ -3,6 +3,8 @@ module FifthedSim
   ##
   # Model an attack vs AC
   class Attack
+    prepend Serialized
+
     class DefinitionProxy
       def initialize(name, &block)
         @attrs = {
@@ -62,6 +64,12 @@ module FifthedSim
       @crit_threshold = attrs[:crit_threshold]
       @crit_damage = attrs[:crit_damage]
     end
+
+    attribute :name, String
+    attribute :to_hit, Integer
+    attribute :damage, Damage
+    attribute :crit_threshold, Integer, default: 20
+    attribute :crit_damage, Damage
 
     def hit_roll
       1.d(20) + @to_hit

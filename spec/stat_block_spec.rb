@@ -56,5 +56,9 @@ RSpec.describe FifthedSim::StatBlock do
     it "is valid" do
       expect{ subject }.to_not raise_error
     end
+
+    it "has expected values" do
+      expect(subject.str.value).to eq(10)
+    end
   end
 end

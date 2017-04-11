@@ -3,6 +3,8 @@ module FifthedSim
   # Spells model save-or-take-damage stuff.
   # At some point in the future I hope to modify them so they work as other stu
   class SaveDamage
+    include Serialized
+
     class DefinitionProxy
       ##
       def initialize(name, &block)
@@ -49,6 +51,12 @@ module FifthedSim
       @save_type = hash[:save_type]
       @save_dc = hash[:save_dc]
     end
+
+    attribute :name, String
+    attribute :damage, Damage
+    attribute :save_damage, Damage
+    attribute :save_type, Stat
+    attribute :save_dc, Fixnum
 
     attr_reader :save_dc,
       :save_type

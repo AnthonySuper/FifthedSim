@@ -28,12 +28,15 @@ module FifthedSim
 
     DAMAGE_TYPES.each do |type|
       attribute type, DiceExpression,
-        allow_nil: false,
         required: false
     end
 
     def initialize(hash)
-      @hash = hash
+      @hash = hash.delete_if{|k, v| v.nil?}
+      if @hash != hash || @hash.keys.any?(&:nil?)
+        require 'pry'
+        binding.pry
+      end
     end
 
     ##
