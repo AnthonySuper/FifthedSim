@@ -1,4 +1,5 @@
 require "fifthed_sim/version"
+require "fifthed_sim/fifth_serial"
 require "fifthed_sim/dice_expression"
 require "fifthed_sim/distribution"
 require "fifthed_sim/attack"
