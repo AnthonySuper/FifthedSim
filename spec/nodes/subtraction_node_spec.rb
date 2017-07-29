@@ -7,4 +7,15 @@ RSpec.describe FifthedSim::SubtractionNode do
     let(:node) { subject }
     it_behaves_like "dice expression"
   end
+
+  describe "serialization" do
+    [FifthedSim::RollNode.new(1, 20) - 3, 
+     FifthedSim::RollNode.new(1, 20) - 5].each do |expr|
+      it "serializes #{expr} cleanly" do
+        rt = serial_roundtrip(expr)
+        expect(expr.value).to eq(expr.value)
+        expect(expr.average).to eq(expr.average)
+      end
+    end
+  end
 end

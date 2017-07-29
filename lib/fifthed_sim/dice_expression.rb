@@ -111,10 +111,19 @@ module FifthedSim
         rhs = instance_variable_get(:@rhs)
         "(#{lhs.expression_equation} #{op} #{rhs.expression_equation})"
       end
+
+      self.send(:define_method, :to_fifth_serial) do
+        lhs = instance_variable_get(:@lhs)
+        rhs = instance_variable_get(:@rhs)
+        { lhs: lhs, rhs: rhs }
+      end
+
+      def self.from_fifth_serial hash
+        self.new(hash[:lhs], hash[:rhs])
+      end
     end
   end
 end
-
 ##
 # Allow .to_dice_expression and other needed values on Fixnums
 class Fixnum

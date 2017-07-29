@@ -9,13 +9,12 @@ module FifthedSim
     class RegistrationError < StandardError
     end
 
-    ATOMS = [Numeric, String].freeze
+    ATOMS = [Numeric, String, NilClass].freeze
 
     def self.register symname, klass
-      @serialtable ||= {}
       raise RegistrationError, 
-        "Not a newable object" unless klass.respond_to?(:new)
-      @serialtable[symname.to_s] = klass
+        "Can't use to deserialize" unless klass.respond_to?(:from_fifth_serial)
+      serialtable[symname.to_sym] = klass
     end
 
     def self.is_atom? obj
@@ -37,30 +36,39 @@ module FifthedSim
     def self.dump obj
       return obj if is_atom?(obj)
       hash = self.shallow_dump(obj)
-      hash["type"] = sym_name(obj)
-      return Hash[hash.map do |k, v|
+      fully_serial = Hash[hash.map do |k, v|
         [k, self.dump(v)]
       end]
+      fully_serial["fifth_serial_class"] = sym_name(obj)
+      fully_serial
     end
 
-    def shallow_dump obj
+    def self.shallow_dump obj
       return obj if obj.is_a? Hash
-      %w(to_fifth_serial to_h).each do |meth|
-        return obj.__send__(obj) if obj.respond_to?(meth)
+      %w(to_fifth_serial to_h).each do |type|
+        return obj.__send__(type) if obj.respond_to?(type)
       end
       raise SerializationError,
         "#{obj.class} cannot be dumped (not a hash or atom)"
     end
-        
+
+    def self.can_serialize? obj
+      klass = if obj.is_a? Class
+                obj
+              else
+                obj.class
+              end
+      serialtable.has_value? klass
+    end
 
     protected
 
-    def self.from_hash(obj)
-      klass = @serialtable[obj.type.to_s]
-      return klass.new(Hash[obj.map do |k, v|
-        next if k == "type"
+    def self.from_hash(hash)
+      klass = self.class_for_hash(hash)
+      return klass.from_fifth_serial(Hash[hash.map do |k, v|
+        next if k == "fifth_serial_class"
         [k.to_sym, self.load(v)]
-      end])
+      end.compact])
     end
 
     def self.from_array obj
@@ -68,7 +76,25 @@ module FifthedSim
     end
 
     def self.sym_name(obj)
-      @symtable.key(obj.class)
+      key = serialtable.key(obj.class)
+      raise SerializationError,
+        "Class #{obj.class} cannot be dumped" unless key
+      key
+    end
+
+    def self.serialtable
+      @serialtable ||= {}
+    end
+
+    def self.class_for_hash(hash)
+      self.class_for_key(hash["fifth_serial_class"].to_sym)
+    end
+
+    def self.class_for_key(key)
+      klass = serialtable[key]
+      raise SerializationError,
+        "Class #{key} not registered" unless key
+      klass
     end
   end
 end

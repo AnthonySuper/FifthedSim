@@ -12,7 +12,12 @@ RSpec.describe FifthedSim::FifthSerial do
   end
 
   describe "registration" do
-    let(:klass) { Class.new }
+    let(:klass) do 
+      Class.new do 
+        def self.from_fifth_serial hash
+        end
+      end
+    end
 
     it "registers" do
       expect {

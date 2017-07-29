@@ -1,6 +1,9 @@
 require_relative '../dice_expression'
+require_relative "../fifth_serial"
+
 module FifthedSim
   class SubtractionNode < DiceExpression
+
     def initialize(lhs, rhs)
       @lhs = lhs
       @rhs = rhs
@@ -20,4 +23,6 @@ module FifthedSim
 
     define_binary_op_equations "-"
   end
+  FifthSerial.register("subtraction_node", SubtractionNode)
+
 end

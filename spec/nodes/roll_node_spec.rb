@@ -53,4 +53,14 @@ RSpec.describe FifthedSim::RollNode do
       expect(subject.percentile).to be_within(0.0001).of(1.0)
     end
   end
+
+  describe "serialization" do
+    subject { described_class.new(20, 1) }
+    let(:roundtrip) { serial_roundtrip(subject) }
+
+    it "serializes cleanly" do
+      expect(roundtrip.value).to equal(subject.value)
+      expect(roundtrip.type).to equal(subject.type)
+    end
+  end
 end

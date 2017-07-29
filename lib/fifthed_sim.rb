@@ -21,6 +21,14 @@ module FifthedSim
     MultiNode.d(*args)
   end
 
+  def self.serialize(obj)
+    FifthSerial.dump(obj)
+  end
+
+  def self.deserialize(hash)
+    FifthSerial.load(hash)
+  end
+
   def self.make_roll(val, type)
     RollNode.new(val, type)
   end

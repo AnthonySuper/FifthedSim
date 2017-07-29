@@ -1,4 +1,5 @@
 require_relative '../dice_expression.rb'
+require_relative "../fifth_serial"
 
 module FifthedSim
   ##
@@ -6,6 +7,10 @@ module FifthedSim
   # Users of the library will rarely interact with this class, and will instead manpiulate values based on the DiceResult type.
   #
   class RollNode < DiceExpression
+
+    def self.from_fifth_serial(hash)
+      self.new(hash[:value], hash[:type])
+    end
 
     ##
     # Create a diceresult by rolling a certain type.
@@ -29,9 +34,10 @@ module FifthedSim
     end
 
     def initialize(val, type)
-      unless val.is_a?(Fixnum) && type.is_a?(Fixnum)
-        raise ArgumentError, "Type invald"
-      end
+      raise ArgumentError,
+        "val '#{val}' is not fixnum" unless Fixnum === val
+      raise ArgumentError,
+        "type '#{type}' is not fixnum" unless Fixnum === type
       @value = val
       @type = type
     end
@@ -84,5 +90,11 @@ module FifthedSim
     def expression_equation
       "d#{@type}"
     end
+
+    def to_fifth_serial
+      { value: @value, type: @type }
+    end
   end
+
+  FifthSerial.register("roll_node", RollNode)
 end
