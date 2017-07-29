@@ -13,4 +13,16 @@ RSpec.describe FifthedSim::MultiplicationNode do
       expect(subject.value).to eq(40)
     end
   end
+
+  describe "serialization" do
+    [1.d(20) * 2,
+     1.d(10) * 1.d(10),
+     (1.d(10) * 1.d(10)) * 1.d(20)].each do |expr|
+       it "roundtrips #{expr}" do
+         rt = serial_roundtrip(expr)
+         expect(expr.value).to eq(rt.value)
+         expect(expr.average).to eq(rt.average)
+       end
+     end
+  end
 end
