@@ -124,6 +124,7 @@ module FifthedSim
     end
   end
 end
+
 ##
 # Allow .to_dice_expression and other needed values on Fixnums
 class Fixnum

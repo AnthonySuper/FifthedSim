@@ -35,12 +35,17 @@ module FifthedSim
 
     def self.dump obj
       return obj if is_atom?(obj)
+      return self.dump_array(obj) if Array === obj
       hash = self.shallow_dump(obj)
       fully_serial = Hash[hash.map do |k, v|
         [k, self.dump(v)]
       end]
       fully_serial["fifth_serial_class"] = sym_name(obj)
       fully_serial
+    end
+
+    def self.dump_array array
+      array.map{|elm| self.dump(elm)}
     end
 
     def self.shallow_dump obj

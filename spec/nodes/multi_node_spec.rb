@@ -97,4 +97,14 @@ RSpec.describe FifthedSim::MultiNode do
       expect(&subject).to_not raise_error
     end
   end
+
+  describe "serialization" do
+    [1.d(20), 2.d(10), 3.d(100)].each do |expr|
+      it "serializes #{expr}" do
+        rt = serial_roundtrip(expr)
+        expect(rt.value).to eq(expr.value)
+        expect(rt.average).to eq(expr.average)
+      end
+    end
+  end
 end

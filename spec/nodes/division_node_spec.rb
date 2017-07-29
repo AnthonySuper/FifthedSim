@@ -39,4 +39,16 @@ RSpec.describe FifthedSim::DivisionNode do
       expect(subject.min).to eq(0)
     end
   end
+
+  describe "serialization" do
+    [1.d(20) / 2,
+     1.d(20) / 1.d(2),
+     1.d(20) / 1.d(20)].each do |expr|
+       it "rountrips #{expr}" do
+         rt = serial_roundtrip(expr)
+         expect(rt.value).to eq(expr.value)
+         expect(rt.average).to eq(expr.average)
+       end
+     end
+  end
 end

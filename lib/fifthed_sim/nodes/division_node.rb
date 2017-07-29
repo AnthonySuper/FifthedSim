@@ -1,4 +1,6 @@
 require_relative '../dice_expression'
+require_relative '../fifth_serial'
+
 module FifthedSim
   class DivisionNode < DiceExpression
 
@@ -21,4 +23,6 @@ module FifthedSim
 
     define_binary_op_equations "/"
   end
+
+  FifthSerial.register("division_node", DivisionNode)
 end

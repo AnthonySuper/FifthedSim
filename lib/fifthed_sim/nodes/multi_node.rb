@@ -1,5 +1,6 @@
 require_relative '../distribution'
 require_relative '../dice_expression'
+require_relative '../fifth_serial'
 
 ##
 # We sneakily monkey-patch Fixnum here, to allow us to use a nice syntax
@@ -31,6 +32,10 @@ module FifthedSim
   class MultiNode < DiceExpression
     def self.d(num, type)
       self.new(num.times.map{RollNode.roll(type)})
+    end
+
+    def self.from_fifth_serial hash
+      self.new(hash[:array])
     end
 
     ## 
@@ -121,6 +126,10 @@ module FifthedSim
       end.join(", ") + ")"
     end
 
+    def to_fifth_serial
+      { array: @array }
+    end
+
     private
 
     def occurences(num)
@@ -133,4 +142,6 @@ module FifthedSim
       end.inject(:+)
     end
   end
+
+  FifthSerial.register("multi_node", MultiNode)
 end
