@@ -15,6 +15,11 @@ RSpec.describe FifthedSim::Attack do
       end
     end
 
+    it "serializes properly" do
+      rt = serial_roundtrip(subject)
+      expect(rt.hit_roll.average).to eq(subject.hit_roll.average)
+    end
+
     it "does not throw" do
       expect{subject}.to_not raise_error
     end

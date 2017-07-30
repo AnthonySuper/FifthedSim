@@ -1,4 +1,6 @@
 require_relative './damage'
+require_relative "./fifth_serial"
+
 module FifthedSim
   ##
   # Model an attack vs AC
@@ -55,6 +57,10 @@ module FifthedSim
       self.new(d.attrs)
     end
 
+    def self.from_fifth_serial(hash)
+      self.new(hash)
+    end
+
     def initialize(attrs)
       @name = attrs[:name]
       @to_hit = attrs[:to_hit]
@@ -82,5 +88,13 @@ module FifthedSim
     def raw_damage
       @damage.raw
     end
+
+    def to_fifth_serial
+      Hash[%w(name to_hit damage crit_threshold crit_damage).map do |attr|
+        [attr, self.instance_variable_get("@#{attr}")]
+      end]
+    end
   end
+
+  FifthSerial.register("attack", Attack)
 end
