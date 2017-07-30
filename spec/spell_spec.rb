@@ -37,4 +37,6 @@ RSpec.describe FifthedSim::Spell do
       end
     end
   end
+
+  ## TODO: Test serialization
 end

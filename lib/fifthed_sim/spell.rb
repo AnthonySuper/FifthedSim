@@ -1,3 +1,6 @@
+require_relative "./fifth_serial"
+require_relative "./damage"
+
 module FifthedSim
   ##
   # Spells model save-or-take-damage stuff.
@@ -42,6 +45,10 @@ module FifthedSim
       self.new(h)
     end
 
+    def self.from_fifth_serial(hash)
+      self.new(hash)
+    end
+
     def initialize(hash)
       @name = hash[:name]
       @damage = hash[:damage]
@@ -70,5 +77,12 @@ module FifthedSim
     def raw_save_damage
       @save_damage.raw
     end
+
+    def to_fifth_serial
+      Hash[%w(name damage save_damage save_type save_dc).map do |type|
+        [type, self.instance_variable_get("@#{type}")]
+      end]
+    end
   end
+  FifthSerial.register("spell", Spell)
 end
