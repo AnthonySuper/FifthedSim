@@ -1,4 +1,6 @@
 require_relative './damage_types'
+require_relative "./fifth_serial"
+
 module FifthedSim
   class Damage
 
@@ -20,6 +22,10 @@ module FifthedSim
     def self.define(&block)
       h = DefinitionProxy.new(&block).attrs
       self.new(h)
+    end
+
+    def self.from_fifth_serial hash
+      self.new(hash)
     end
 
     def initialize(hash)
@@ -48,5 +54,11 @@ module FifthedSim
     def raw
       @hash.values.inject{|s, k| s + k}
     end
+
+    def to_fifth_serial
+      @hash.dup
+    end
   end
+
+  FifthSerial.register("damage", Damage)
 end

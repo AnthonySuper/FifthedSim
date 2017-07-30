@@ -65,4 +65,18 @@ RSpec.describe FifthedSim::Damage do
       end
     end
   end
+
+  describe "serialization" do
+    subject do 
+      described_class.define do
+        slashing 1.d(10)
+        fire 3.d(6)
+      end
+    end
+
+    it "serializes properly" do
+      rt = serial_roundtrip(subject)
+      expect(rt.to(normal).average).to eq(subject.to(normal).average)
+    end
+  end
 end
