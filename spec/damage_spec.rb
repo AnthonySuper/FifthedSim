@@ -54,14 +54,14 @@ RSpec.describe FifthedSim::Damage do
     context "against a FireIce" do
       let(:foe) { fireice }
       it "does half of 1d4" do
-        expect(subject.to(foe).average).to eq((1.d(4) / 2).average)
+        expect(subject.to(foe).average).to be_within(0.0001).of((1.d(4) / 2).average)
       end
     end
 
     context "against a Normal" do
       let(:foe) { normal } 
       it "does full damage" do
-        expect(subject.to(foe).average).to eq(2.d(4).average)
+        expect(subject.to(foe).average).to be_within(0.0001).of(2.d(4).average)
       end
     end
   end
