@@ -38,7 +38,7 @@ RSpec.describe FifthedSim::Damage do
     context "against a Normal" do
       let(:foe) { normal }
       it "does full damage" do
-        expect(subject.to(foe).average).to be_within(0.0001).of(1.d(4).average)
+        expect(subject.to(foe).average).to be_within(0.00001).of(1.d(4).average)
       end
     end
   end
