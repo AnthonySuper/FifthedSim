@@ -22,13 +22,14 @@ RSpec.describe FifthedSim::Distribution do
     end
 
     let(:unique_prob) { 1.0 / 20**2 }
+    let(:ep) { 0.0000001}
 
     it "calculates the probability of critting" do
-      expect(subject.percent_exactly(40)).to eq(unique_prob)
+      expect(subject.percent_exactly(40)).to be_within(ep).of(unique_prob)
     end
 
     it "calculates the probability of critfailing" do
-      expect(subject.percent_exactly(2)).to eq(unique_prob)
+      expect(subject.percent_exactly(2)).to be_within(ep).of(unique_prob)
     end
 
     it "calculates values below the range" do
@@ -66,11 +67,7 @@ RSpec.describe FifthedSim::Distribution do
       end
 
       it "has a 1 in 20 chance of being a 6" do
-        expect(subject.percent_exactly(6)).to eq(1.0 / 20)
-      end
-      
-      it "uniformly has a chance of 1 in 20" do
-        expect(subject.map.values).to eq(20.times.map{1.0 / 20})
+        expect(subject.percent_exactly(6)).to be_within(0.00001).of(1.0 / 20)
       end
     end
 

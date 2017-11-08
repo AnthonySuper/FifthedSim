@@ -19,7 +19,7 @@ RSpec.describe FifthedSim::Stat do
       let(:roll) { subject.saving_throw }
 
       it "has an average of 13.5" do
-        expect(roll.average).to eq(13.5)
+        expect(roll.average).to be_within(0.000001).of(13.5)
       end
     end
   end

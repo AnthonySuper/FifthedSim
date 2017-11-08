@@ -29,6 +29,7 @@ module FifthedSim
   # It is filled with the actual result of randomly-rolled dice, but contains
   # methods to enable the calculation of average values.
   class MultiNode < DiceExpression
+
     def self.d(num, type)
       self.new(num.times.map{RollNode.roll(type)})
     end
@@ -101,12 +102,7 @@ module FifthedSim
     # Obtain a probability distribution for when we roll this many dice.
     # This is an instnace of the Distribution class.
     def distribution
-      return @distribution if defined?(@distribution)
-      total_possible = (dice_type ** roll_count)
-      mapped = min_value.upto(max_value).map do |k|
-        [k, (occurences(k) / total_possible.to_f)]
-      end
-      @distribution = Distribution.new(Hash[mapped])
+      @array[0].distribution.power_convolve(roll_count)
     end
 
     def value_equation(terminal: false)
