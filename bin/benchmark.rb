@@ -1,8 +1,17 @@
 $LOAD_PATH.unshift(File.join(File.dirname(__FILE__), "../lib"))
 require 'fifthed_sim'
 require 'benchmark'
-Benchmark.bm(7) do |x|
-  x.report("1d100") { 1000.times{ 1.d(100) } }
-  x.report("10d100.distribution") { 100.times{ 10.d(100).distribution } }
+
+
+def avg_benchmark(&block)
+  1.upto(2).map do
+    Benchmark.realtime(&block)
+  end.inject(:+) / 2.0
 end
 
+1.upto(200).each do |n|
+  d = avg_benchmark{
+    n.d(10).distribution
+  }
+  puts "#{n}\t#{d}"
+end

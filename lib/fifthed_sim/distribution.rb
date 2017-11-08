@@ -4,6 +4,127 @@ module FifthedSim
   ##
   # Models a probabilistic distribution.
   class Distribution
+
+    class Coefficient
+      ##
+      # @param map a hash of result => chance
+      # @param min the minimum value in the map (to save on calculation time)
+      # @param max the maximum value in the map (also to save on calculation time)
+      def initialize(map, min = nil, max = nil)
+        # We want to properly find the max and min values
+        # This is because out-of-range values after adding will be a bit "weird"
+        # in the sense that they'll be *extremely close* to zero but not quite.
+        # So we can use this information to later make them actually zero.
+        @min = min || map.keys.min
+        @max = max || map.keys.max
+        # Round array up to nearest power of two
+        # This is required for a proper FFT, typically.
+        length = nearest_two_power(@max)
+        # Actually convert to coefficient form
+        @coeffs = 0.upto(length).map{|x| map[x] || 0.0}
+      end
+
+      # Let others read our attributes
+      attr_reader :min, :max, :coeffs
+
+      def add(other)
+        # We add zero coefficients so the FFT can find more solutions.
+        # Since the output polynomial is larger than the input 
+        # polynomial (since it has more terms),
+        # We need to padd this now.
+        # Get the size to pad to here: 
+        new_size = nearest_two_power(coeffs.size + other.coeffs.size)
+        # Now pad our coefficients
+        arr = extend_array(new_size)
+        # And padd theirs
+        oarr = other.extend_array(new_size)
+        # Do the FFT
+        fft = fft_recurse(arr)
+        # And again
+        offt = fft_recurse(oarr)
+        # Pointwise-multiply
+        mult = fft.zip(offt).map{|(a, b)| a * b}
+        # Inverse FFT returns complex numbers again.
+        # However, we only care about real probability,
+        # so we just throw away the complex component.
+        # Simple!
+        res = inverse_fft(mult).map!(&:real)
+        # now, just return a distribution:
+        hsh = Hash[(min + other.min).upto(max + other.max).map do |x|
+          [x, res[x]]
+        end]
+        Distribution.new(hsh)
+      end
+
+      def exp(pow)
+        new_size = nearest_two_power(@max * (pow + 1))
+        new_min = min*pow
+        new_max = max*pow
+        arr = extend_array(new_size)
+        fft = fft_recurse(arr)
+        fft.map!{|x| x**pow}
+        res = inverse_fft(fft).map!(&:real)
+        hsh = Hash[new_min.upto(new_max).map do |x|
+          [x, res[x]]
+        end]
+        Distribution.new(hsh)
+      end
+
+      # Padd the array to a given size by adding 0 coefficients
+      def extend_array(size)
+        return Array.new(size) do |x|
+          @coeffs[x] || 0.0
+        end
+        # return @coeffs + Array.new(size - @coeffs.size, 0.0)
+      end
+
+      private
+
+      # FFT works best on powers of two.
+      # In fact, ours only works on powers of two.
+      # So we find the nearest power of two fairly often
+      def nearest_two_power(num)
+        return 1 if num == 0
+        exp = Math.log(num, 2).ceil
+        if exp == 0
+          1
+        else
+          2**exp
+        end
+      end
+
+      # The actual FFT. Borrowed from Rosetta Code.
+      def fft_recurse(vec)
+        # Base case: the FFT of a coefficient vector of size one is just the vector
+        return vec if vec.size <= 1
+        # The FFT works by splitting the coefficient vectors into odd and even indexes
+        # We do that here
+        evens_odds = vec.partition.with_index{|_,i| i.even?}
+        # Now we smartly perform the FFT on both sides
+        evens, odds = evens_odds.map{|even_odd| fft_recurse(even_odd)*2}
+        # And zip them together while applying the solution
+        evens.zip(odds).map.with_index do |(even, odd),i|
+          even + odd * Math::E ** Complex(0, -2 * Math::PI * i / vec.size)
+        end
+      end
+
+      # Due to more math trickery, we actually just another FFT
+      # In order to invert the FFT
+      def inverse_fft(vec)
+        # The conjugate of a complex number works like this:
+        #   a + bi => b + ai
+        # This is the modification we perform to invert
+        # the FFT
+        nv = vec.map(&:conjugate)
+        # Do the actual FFT
+        applied = fft_recurse(nv)
+        # Now we re-conjugate
+        # The inverse FFT actually multiplies each coefficient by the number
+        # of coefficients, so we divide that out here to be accurate.
+        applied.map!(&:conjugate)
+          .map!{|x| x / applied.size}
+      end
+    end
     ##
     # Get a distrubtion for a number.
     # This will be a uniform distribution with P = 1 at this number and P = 0 elsewhere.
@@ -37,11 +158,13 @@ module FifthedSim
       @min = keys.min
       @map = map.dup
       @map.default = 0
+      @coefficient = Coefficient.new(@map, @min, @max)
     end
 
     attr_reader :total_possible,
       :min,
-      :max
+      :max,
+      :coefficient
 
 
     def range
@@ -161,22 +284,12 @@ module FifthedSim
     alias_method :percentile_of,
       :percent_lower_equal
 
-
-
     def convolve(other)
-      h = {}
-      abs_min = [@min, other.min].min
-      abs_max = [@max, other.max].max
-      min_possible = @min + other.min
-      max_possible = @max + other.max
-      # TODO: there has to be a less stupid way to do this right?
-      v = min_possible.upto(max_possible).map do |val|
-        sum = abs_min.upto(abs_max).map do |m|
-          percent_exactly(m) * other.percent_exactly(val - m)
-        end.inject(:+)
-        [val, sum]
-      end
-      self.class.new(Hash[v])
+      @coefficient.add(other.coefficient)
+    end
+
+    def power_convolve(pow)
+      @coefficient.exp(pow)
     end
 
     ##
